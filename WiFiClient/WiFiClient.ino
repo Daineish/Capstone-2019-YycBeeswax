@@ -66,10 +66,10 @@ void loop()
     if(rate > 5000)
     {
         // Check that we're still connected to WiFi
-        if(Wifi.Status() != WL_CONNECTED)
+        if(WiFi.status() != WL_CONNECTED)
         {
             Serial.print("Trying to reconnect to WiFi");
-            while(Wifi.Status() != WL_CONNECTED)
+            while(WiFi.status() != WL_CONNECTED)
             {
                 delay(500);
                 Serial.print(".");

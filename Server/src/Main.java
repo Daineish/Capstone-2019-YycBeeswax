@@ -1,22 +1,21 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 
+/**
+ * The Main class which handles the Server and it's communications.
+ */
 public class Main
 {
+
     public static void main(String argv[]) throws Exception
     {
         // Open ServerSocket
         ServerMain server = new ServerMain(4444);
+        System.out.println(InetAddress.getLocalHost());
 
         while (true)
         {
             // Accept the client, receive a string message.
-            Socket connectionSocket = server.accept();
-            BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-            String clientSentence = inFromClient.readLine();
+            String clientSentence = server.ReadMessageFromDevice();
             Utilities.PrintMessage("\nReceived: " + clientSentence);
 
             try
@@ -52,4 +51,5 @@ public class Main
             }
         } // endWhile()
     }
+
 }

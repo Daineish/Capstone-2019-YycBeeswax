@@ -1,5 +1,7 @@
-import java.net.InetAddress;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 /**
  * This class creates a server which acts at the communication point between
@@ -16,6 +18,13 @@ public class ServerMain extends ServerSocket
     public ServerMain(int port) throws java.io.IOException
     {
         super(port);
+    }
+
+    public String ReadMessageFromDevice() throws java.io.IOException
+    {
+        Socket connectionSocket = accept();
+        BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+        return inFromClient.readLine();
     }
 
     /**
