@@ -108,7 +108,7 @@ void loop()
 
         // Read all the lines of the reply from server and print them to Serial
         Serial.println("Received from remote server: ");
-        delay(500); // TODO: this is hacky, if I don't have this we ususally just receive 1 byte...
+        delay(1000); // TODO: this is hacky, if I don't have this we ususally just receive 1 byte...
         while (client.available())
         {
             char ch = static_cast<char>(client.read());
