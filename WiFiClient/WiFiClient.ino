@@ -65,6 +65,18 @@ void loop()
 {
     if(rate > 5000)
     {
+        // Check that we're still connected to WiFi
+        if(Wifi.Status() != WL_CONNECTED)
+        {
+            Serial.print("Trying to reconnect to WiFi");
+            while(Wifi.Status() != WL_CONNECTED)
+            {
+                delay(500);
+                Serial.print(".");
+            }
+            Serial.print("WiFi connected");
+        }
+
         Serial.print("\nConnecting to ");
         Serial.print(host);
         Serial.print(':');
@@ -127,6 +139,6 @@ void loop()
         client.stop();
     }
 
-    delay(100); // execute once every 5 minutes, don't flood remote service
+    delay(100);
     rate += 100;
 }

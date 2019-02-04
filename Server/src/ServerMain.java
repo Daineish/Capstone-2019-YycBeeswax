@@ -105,7 +105,7 @@ public class ServerMain
             AssertMessage(false, false, "Sending data to database not yet implemented.");
         }
         catch(Exception e) { }
-        sent = false;
+        //sent = false;
 
         return sent;
     }
@@ -125,7 +125,7 @@ public class ServerMain
             AssertMessage(false, false, "Sending data to database not yet implemented.");
         }
         catch(Exception e) { }
-        sent = false;
+        //sent = false;
 
         return sent;
     }
@@ -158,7 +158,6 @@ public class ServerMain
     /**
      * Debugging print. Only prints s if g_printDebugMessage is true.
      * @param s - the string to print
-     * @return
      */
     private static void PrintMessage(String s)
     {
