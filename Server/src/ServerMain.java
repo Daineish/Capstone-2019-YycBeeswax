@@ -13,12 +13,16 @@ import java.io.*;
  */
 public class ServerMain
 {
+    // Whether or not to print messages.
+    public static final boolean g_printDebugMessage = true;
+
+    // Constants for data types received from devices.
     public static final String g_temperatureSensor = "TH_SENSOR";
     public static final String g_videoData = "VIDEO_DATA";
 
     public static void main(String argv[]) throws Exception
     {
-        String clientSentence;
+        // Open ServerSocket
         ServerSocket welcomeSocket = new ServerSocket(4444);
         System.out.println(InetAddress.getLocalHost());
 
@@ -27,8 +31,8 @@ public class ServerMain
             // Accept the client, receive a string message.
             Socket connectionSocket = welcomeSocket.accept();
             BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-            clientSentence = inFromClient.readLine();
-            System.out.println("\nReceived: " + clientSentence);
+            String clientSentence = inFromClient.readLine();
+            PrintMessage("\nReceived: " + clientSentence);
 
             try
             {
@@ -44,9 +48,7 @@ public class ServerMain
                     AssertMessage(clientVals.length == 4, true, "Incorrect number of values received from temperature/humidity sensor");
                     float temp = Float.parseFloat(clientVals[2]);
                     float humid = Float.parseFloat(clientVals[3]);
-                    System.out.println("Hive ID: " + hiveID);
-                    System.out.println("Temperature read: " + temp);
-                    System.out.println("Humidity read: " + humid);
+                    PrintMessage("Hive ID: " + hiveID + "\nTemperature read: " + temp + "\nHumidity read: " + humid);
                     SendTempHumidToDatabase(hiveID, temp, humid);
                 }
                 else if(g_videoData.equals(clientVals[0]))
@@ -127,16 +129,42 @@ public class ServerMain
 
         return sent;
     }
+
+    /**
+     * Asserts that b is true, if false it prints msg to System.err if thr is false,
+     *     else it throws a new exception with msg.
+     * @param b - the value to assert is true.
+     * @param thr - whether or not to throw an exception.
+     * @param msg - the message to print or throw
+     * @return b
+     * @throws Exception if b is false and thr is true
+     */
     private static boolean AssertMessage(boolean b, boolean thr, String msg) throws Exception
     {
         if (!b)
         {
-            System.err.println("Assertion failed: " + msg);
             if(thr)
             {
                 throw new Exception("Assertion failed: " + msg);
             }
+            else
+            {
+                System.err.println("Assertion failed: " + msg);
+            }
         }
         return b;
+    }
+
+    /**
+     * Debugging print. Only prints s if g_printDebugMessage is true.
+     * @param s - the string to print
+     * @return
+     */
+    private static void PrintMessage(String s)
+    {
+        if(g_printDebugMessage)
+        {
+            System.out.println(s);
+        }
     }
 }
