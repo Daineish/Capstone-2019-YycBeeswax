@@ -11,10 +11,11 @@ import java.util.ArrayList;
 public class Database {
 
 	private Connection connection;
+	
+	//TODO move these values into a external config file
 	private String db = "jdbc:mysql://localhost:3306/capstone_db";
 	private String username = "root";
 	private String password = "capstone";
-	
 	
 	
 	public Database()
@@ -26,10 +27,12 @@ public class Database {
 	{
 		try 
 		{
+			//attempt to start connection with config file values
 			connection = DriverManager.getConnection(db, username, password);
 		} 
 		catch (SQLException e) 
 		{
+			//exit if db connection fails and print error log
 			e.printStackTrace();
 			System.exit(1);
 		}
@@ -38,24 +41,36 @@ public class Database {
 	public void closeConnection(){
 		try
 		{
+			//close database connection
 			connection.close();
 		}
 		catch (SQLException e) 
 		{
+			//exit if db connection fails to close and print error log
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
 	
+	/**
+     * Gets the list of stakeholders from the database who are watching the hive with HiveID.
+     * @param hiveID - the hiveID where the data is coming from.
+     * @return the list of stakeholders in an ArrayList, or return a null if an error is detected
+     */
 	public ArrayList<String> getStakeholderEmail(int HiveID){
 		try
 		{
 			ResultSet rs;
 			ArrayList<String> emailList = new ArrayList<String>();
+			
+			//build query to be executed
 			String query = "SELECT stakeholder.Email FROM stakeholder INNER JOIN watching ON stakeholder.Name = watching.Name WHERE watching.HiveID = ?";
 			PreparedStatement prepared = connection.prepareStatement(query);
 			prepared.setInt(1, HiveID);
+			//execute query and put result into result set rs
 			rs = prepared.executeQuery();
+			
+			//parse result set, adding emails to the ArrayList until result set is empty
 			while(rs.next()){
 				emailList.add(rs.getString("Email"));
 			}
@@ -68,12 +83,18 @@ public class Database {
 		}
 	}
 	
-	//performs a threshold check and stores the data regardless
-	public boolean storeSensorData(int hiveId, float temp, float humidity){
+	/**
+     * performs a threshold check on parameter data, notifying stakeholders of failed check and stores the data in the database regardless
+     * @param hiveID - the hiveID where the data is coming from.
+     * @param temp  - the temperature to send.
+     * @param humid - the humidity to send.
+     * @return true if successfully stored, else false.
+     */
+	public boolean storeSensorData(int hiveId, float temp, float humid){
 		try
 		{
 			//perform check to see if notification required
-			String checkResult = thresholdCheck(hiveId, temp, humidity);
+			String checkResult = thresholdCheck(hiveId, temp, humid);
 			if(!checkResult.equals("passed")){
 				NotificationHandler handler = new NotificationHandler();
 				ArrayList<String> list = getStakeholderEmail(hiveId);
@@ -93,9 +114,9 @@ public class Database {
 			
 			//INSERT humidity data
 			prepared.setString(2, "HUMIDITY");
-			prepared.setFloat(3, humidity);
+			prepared.setFloat(3, humid);
 			prepared.execute();
-			System.out.println("Humidity data of " + humidity + " successfully added to database");
+			System.out.println("Humidity data of " + humid + " successfully added to database");
 			
 			//return true if both values added without error
 			return true;
