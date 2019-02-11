@@ -23,6 +23,10 @@
 .idea/
 *.iml
 
+# Eclipse Stuff (?)
+.metadata/
+.recommenders/
+
 # Mac Stuff
 .DS_Store
 */DS_Store
