@@ -30,7 +30,7 @@ const char* password = STAPSK;
 // This is a temporary hostname to combat dynamic IP addresses
 //const char* host = "testingarduino.hopto.org";
 // Alternatively you could just use an IP address if you know it's static
-const char* host = "172.20.10.2";
+const char* host = "172.20.10.7";
 const uint16_t port = 4444;
 
 void setup()
@@ -63,7 +63,7 @@ void setup()
 int rate = 0;
 void loop()
 {
-    if(rate > 5000)
+    if(rate > 10000)
     {
         // Check that we're still connected to WiFi
         if(WiFi.status() != WL_CONNECTED)
