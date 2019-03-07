@@ -15,6 +15,7 @@ public class AlertsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alerts);
 
+        // TODO: here you should be able to change alerts bounds and whatnot
 
     }
 }

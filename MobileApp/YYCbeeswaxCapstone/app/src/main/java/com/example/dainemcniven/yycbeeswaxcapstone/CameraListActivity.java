@@ -15,6 +15,8 @@ public class CameraListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cameralist);
 
+        // TODO: Access the database or whatever and see what cameras are available for streaming, list
+        // them here so they can be clicked on?
 
     }
 }

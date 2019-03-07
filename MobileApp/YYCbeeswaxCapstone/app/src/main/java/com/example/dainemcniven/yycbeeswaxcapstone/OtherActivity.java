@@ -15,6 +15,7 @@ public class OtherActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other);
 
+        // TODO: idk what goes in here
 
     }
 }
