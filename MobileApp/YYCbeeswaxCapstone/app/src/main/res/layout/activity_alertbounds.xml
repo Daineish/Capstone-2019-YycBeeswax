@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/editText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:inputType="none"
+                android:text="Humidity"
+                android:textSize="32dp" />
+
+            <TextView
+                android:id="@+id/editText3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:inputType="none"
+                android:text="Lower Bound:"
+                android:textSize="22dp" />
+
+            <EditText
+                android:id="@+id/humidLB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:inputType="numberDecimal"
+                android:text="000" />
+
+            <TextView
+                android:id="@+id/editText5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_row="2"
+                android:layout_rowSpan="1"
+                android:inputType="none"
+                android:text="Upper Bound:"
+                android:textSize="22dp" />
+
+            <EditText
+                android:id="@+id/humidUB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_row="2"
+                android:layout_rowSpan="1"
+                android:inputType="numberDecimal"
+                android:text="000" />
+
+            <TextView
+                android:id="@+id/editText7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="2"
+                android:layout_row="3"
+                android:layout_rowSpan="1"
+                android:inputType="none"
+                android:text="Temperature"
+                android:textSize="32dp" />
+
+            <TextView
+                android:id="@+id/editText9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_row="4"
+                android:layout_rowSpan="1"
+                android:inputType="none"
+                android:text="Lower Bound:"
+                android:textSize="22dp" />
+
+            <EditText
+                android:id="@+id/tempLB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_row="4"
+                android:layout_rowSpan="1"
+                android:inputType="numberSigned"
+                android:text="000" />
+
+            <TextView
+                android:id="@+id/editText10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_row="5"
+                android:layout_rowSpan="1"
+                android:inputType="none"
+                android:text="Upper Bound:"
+                android:textSize="22dp" />
+
+            <EditText
+                android:id="@+id/tempUB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_row="5"
+                android:layout_rowSpan="1"
+                android:inputType="numberSigned"
+                android:text="000" />
+
+            <Button
+                android:id="@+id/resetButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:layout_gravity="right"
+                android:layout_row="6"
+                android:layout_rowSpan="1"
+                android:onClick="resetButtonClicked"
+                android:text="Reset" />
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:layout_row="6"
+                android:layout_rowSpan="1"
+                android:onClick="saveButtonClicked"
+                android:text="Save" />
+
+        </GridLayout>
+    </ScrollView>
+</LinearLayout>

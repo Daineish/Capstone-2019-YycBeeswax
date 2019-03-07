@@ -32,7 +32,7 @@ public class Database
 
     private Database()
     {
-        initializeConnection();
+        //initializeConnection();
     }
 
     public void initializeConnection()
@@ -77,6 +77,65 @@ public class Database
         list.add("Sensor 1");
         list.add("Sensor 2");
         list.add("Sensor 3");
+
+//        try
+//        {
+//            ResultSet rs;
+//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
+//            PreparedStatement prepared = connection.prepareStatement(query);
+//            prepared.setInt(1, 0); // what is this
+//            //execute query and put result into result set rs
+//            rs = prepared.executeQuery();
+//
+//            //parse result set, adding emails to the ArrayList until result set is empty
+//            while (rs.next())
+//            {
+//                list.add(rs.getString("Email"));
+//            }
+//        }
+//        catch(SQLException e)
+//        {}
+
+        return list;
+    }
+
+    public ArrayList<String> GetHives()
+    {
+        // TODO: Get actual hive names from database
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("Hive 1");
+        list.add("Hive 2");
+        list.add("Hive 3");
+
+//        try
+//        {
+//            ResultSet rs;
+//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
+//            PreparedStatement prepared = connection.prepareStatement(query);
+//            prepared.setInt(1, 0); // what is this
+//            //execute query and put result into result set rs
+//            rs = prepared.executeQuery();
+//
+//            //parse result set, adding emails to the ArrayList until result set is empty
+//            while (rs.next())
+//            {
+//                list.add(rs.getString("Email"));
+//            }
+//        }
+//        catch(SQLException e)
+//        {}
+
+        return list;
+    }
+
+    public ArrayList<Integer> GetAlertsForHive(int hive)
+    {
+        // TODO: Get actual hive names from database
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(100);
+        list.add(0);
+        list.add(85);
+        list.add(20);
 
 //        try
 //        {

@@ -40,6 +40,10 @@
             android:label="@string/app_name">
         </activity>
         <activity
+            android:name=".ChangeAlertBounds"
+            android:label="@string/app_name">
+        </activity>
+        <activity
             android:name=".OtherActivity"
             android:label="@string/app_name">
         </activity>
