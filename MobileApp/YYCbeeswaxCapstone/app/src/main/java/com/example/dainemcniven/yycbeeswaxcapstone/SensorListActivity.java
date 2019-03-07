@@ -47,10 +47,7 @@ public class SensorListActivity extends AppCompatActivity
     private void GetAvailableSensors()
     {
         // TODO: access database and get a list of available sensors
-        ArrayList<String> sensors = new ArrayList<String>();
-        sensors.add("Sensor 1");
-        sensors.add("Sensor 2");
-        sensors.add("Sensor 3");
+        ArrayList<String> sensors = Database.getInstance().GetSensors();
 
         LinearLayout mainLayout = new LinearLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
