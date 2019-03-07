@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 
 public class ChangeAlertBounds extends AppCompatActivity
 {
+    // The Hive ID for communication with the database
     private int m_hive;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -57,5 +59,21 @@ public class ChangeAlertBounds extends AppCompatActivity
     public void saveButtonClicked(View v)
     {
         // send data to database
+    }
+
+    public void AlertsOnOffClicked(View v)
+    {
+        // TODO: turn alerts on or off in database depending on state
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.alertsOnOff);
+        if(toggle.isChecked())
+        {
+            // turn alerts on
+            Log.e("a", "turning alerts on");
+        }
+        else
+        {
+            // turn alerts off
+            Log.e("a", "turning alerts off");
+        }
     }
 }

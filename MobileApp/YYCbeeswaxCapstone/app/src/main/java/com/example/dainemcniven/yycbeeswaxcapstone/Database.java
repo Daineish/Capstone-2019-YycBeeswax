@@ -99,6 +99,35 @@ public class Database
         return list;
     }
 
+    public ArrayList<String> GetCameras()
+    {
+        // TODO: Get actual cameras names from database
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("Camera 1");
+        list.add("Camera 2");
+        list.add("Camera 3");
+
+//        try
+//        {
+//            ResultSet rs;
+//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
+//            PreparedStatement prepared = connection.prepareStatement(query);
+//            prepared.setInt(1, 0); // what is this
+//            //execute query and put result into result set rs
+//            rs = prepared.executeQuery();
+//
+//            //parse result set, adding emails to the ArrayList until result set is empty
+//            while (rs.next())
+//            {
+//                list.add(rs.getString("Email"));
+//            }
+//        }
+//        catch(SQLException e)
+//        {}
+
+        return list;
+    }
+
     public ArrayList<String> GetHives()
     {
         // TODO: Get actual hive names from database
