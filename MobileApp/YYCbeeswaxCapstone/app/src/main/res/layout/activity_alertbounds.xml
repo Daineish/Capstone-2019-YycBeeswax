@@ -3,6 +3,7 @@
     android:id="@+id/main_linear_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/yellow"
     android:orientation="vertical">
 
     <ScrollView
@@ -23,6 +24,7 @@
                 android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Humidity"
+                android:textColor="#000000"
                 android:textSize="32dp" />
 
             <TextView
@@ -35,6 +37,7 @@
                 android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Lower Bound:"
+                android:textColor="#000000"
                 android:textSize="22dp" />
 
             <EditText
@@ -46,6 +49,7 @@
                 android:layout_row="1"
                 android:layout_rowSpan="1"
                 android:inputType="numberDecimal"
+                android:textColor="#000000"
                 android:text="000" />
 
             <TextView
@@ -58,6 +62,7 @@
                 android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Upper Bound:"
+                android:textColor="#000000"
                 android:textSize="22dp" />
 
             <EditText
@@ -69,6 +74,7 @@
                 android:layout_row="2"
                 android:layout_rowSpan="1"
                 android:inputType="numberDecimal"
+                android:textColor="#000000"
                 android:text="000" />
 
             <TextView
@@ -81,6 +87,7 @@
                 android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Temperature"
+                android:textColor="#000000"
                 android:textSize="32dp" />
 
             <TextView
@@ -93,6 +100,7 @@
                 android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Lower Bound:"
+                android:textColor="#000000"
                 android:textSize="22dp" />
 
             <EditText
@@ -104,6 +112,7 @@
                 android:layout_row="4"
                 android:layout_rowSpan="1"
                 android:inputType="numberSigned"
+                android:textColor="#000000"
                 android:text="000" />
 
             <TextView
@@ -116,6 +125,7 @@
                 android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Upper Bound:"
+                android:textColor="#000000"
                 android:textSize="22dp" />
 
             <EditText
@@ -127,6 +137,7 @@
                 android:layout_row="5"
                 android:layout_rowSpan="1"
                 android:inputType="numberSigned"
+                android:textColor="#000000"
                 android:text="000" />
 
             <Button
@@ -139,6 +150,8 @@
                 android:layout_row="6"
                 android:layout_rowSpan="1"
                 android:onClick="resetButtonClicked"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Reset" />
 
             <Button
@@ -150,6 +163,8 @@
                 android:layout_row="6"
                 android:layout_rowSpan="1"
                 android:onClick="saveButtonClicked"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Save" />
 
             <View
@@ -174,6 +189,7 @@
                 android:layout_row="8"
                 android:layout_rowSpan="1"
                 android:textSize="32dp"
+                android:textColor="#000000"
                 android:text="Alerts:" />
 
             <ToggleButton
@@ -185,6 +201,8 @@
                 android:layout_row="8"
                 android:layout_rowSpan="2"
                 android:onClick="AlertsOnOffClicked"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="ToggleButton" />
 
         </GridLayout>

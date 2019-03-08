@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:columnCount="2"
     android:orientation="vertical"
+    android:background="@color/yellow"
     android:rowCount="2">
 
     <ScrollView
@@ -23,11 +24,10 @@
                 android:id="@+id/cameraText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:editable="false"
-                android:ems="10"
                 android:gravity="center"
                 android:onClick="camerasTextClicked"
                 android:text="Cameras"
+                android:textColor="#000000"
                 android:textSize="62sp" />
 
             <View
@@ -41,10 +41,10 @@
                 android:id="@+id/sensorsText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:gravity="center"
                 android:onClick="sensorsTextClicked"
                 android:text="Sensors"
+                android:textColor="#000000"
                 android:textSize="62sp" />
 
             <View
@@ -59,10 +59,10 @@
                 android:id="@+id/alertsText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:gravity="center"
                 android:onClick="alertsTextClicked"
                 android:text="Alerts"
+                android:textColor="#000000"
                 android:textSize="62sp" />
 
             <View
@@ -77,10 +77,10 @@
                 android:id="@+id/otherText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
                 android:gravity="center"
                 android:onClick="otherTextClicked"
                 android:text="Other"
+                android:textColor="#000000"
                 android:textSize="62sp" />
 
             <View
