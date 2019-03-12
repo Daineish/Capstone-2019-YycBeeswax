@@ -84,7 +84,7 @@ public class Database
             rs = prepared.executeQuery();
         }
         catch(SQLException e)
-        {}
+        {return null}//return null if failed to get sensor data
 
         return rs;
     }
@@ -115,25 +115,29 @@ public class Database
             rs = prepared.executeQuery();
         }
         catch(SQLException e)
-        {}
+        {return null;}//return null if failed to retrieve hiveinfo
 
         return rs;
     }
 
     public boolean UpdateHives(ResultSet rs){
-        String update = "UPDATE hiveinfo SET Location = ?, Owner = ?, TempLB = ?, TempUB = ?, HumidLB = ?, HumidUB = ?, BlockTime = ? WHERE HiveId = ?";
-        PreparedStatement prepared = connection.prepareStatement(update);
-        while(rs.next()) {
-            prepared.setString(1, rs.getString("Location"));
-            prepared.SetString(2, rs.getString("Owner"));
-            prepared.SetFloat(3, rs.getFloat("TempLB"));
-            prepared.SetFloat(4, rs.getFloat("TempUB"));
-            prepared.SetFloat(5, rs.getFloat("HumidLB"));
-            prepared.SetFloat(6, rs.getFloat("HumidUB"));
-            prepared.SetFloat(7, rs.getFloat("BlockTime"));
-            prepared.SetInt(8, rs.getInt("HiveId"));
-            //execute query and put result into result set rs
-            rs = prepared.executeUpdate();
+        try{
+            String update = "UPDATE hiveinfo SET Location = ?, Owner = ?, TempLB = ?, TempUB = ?, HumidLB = ?, HumidUB = ?, BlockTime = ? WHERE HiveId = ?";
+            PreparedStatement prepared = connection.prepareStatement(update);
+            while(rs.next()) {
+                prepared.setString(1, rs.getString("Location"));
+                prepared.SetString(2, rs.getString("Owner"));
+                prepared.SetFloat(3, rs.getFloat("TempLB"));
+                prepared.SetFloat(4, rs.getFloat("TempUB"));
+                prepared.SetFloat(5, rs.getFloat("HumidLB"));
+                prepared.SetFloat(6, rs.getFloat("HumidUB"));
+                prepared.SetFloat(7, rs.getFloat("BlockTime"));
+                prepared.SetInt(8, rs.getInt("HiveId"));
+                //execute update
+                rs = prepared.executeUpdate();
+            }
         }
-    }
+        catch(SQLException e)
+        {return false;}//failed to successfully update
+        return true;//successfully updated
 }
