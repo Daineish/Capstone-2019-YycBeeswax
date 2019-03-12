@@ -32,7 +32,7 @@ public class Database
 
     private Database()
     {
-        //initializeConnection();
+        initializeConnection();
     }
 
     public void initializeConnection()
@@ -70,120 +70,70 @@ public class Database
     //////////////////////////////////////
 
 
-    public ArrayList<String> GetSensors()
+    public ResultSet GetSensorsData(int hiveId, Date startTimeFrame, Date endTimeFrame, String sensorType)
     {
-        // TODO: Get actual sensor names from database
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("Sensor 1");
-        list.add("Sensor 2");
-        list.add("Sensor 3");
+        try
+            ResultSet rs;
+            String query = "SELECT * FROM sensordata WHERE hiveId = ? AND Time >= ? AND Time <= ? AND SensorType = ?";
+            PreparedStatement prepared = connection.prepareStatement(query);
+            prepared.setInt(1, hiveID);
+            prepared.setDate(2, startTimeFrame);
+            prepared.setDate(3, endTimeFrame);
+            prepared.setString(4, sensorType);
+            //execute query and put result into result set rs
+            rs = prepared.executeQuery();
+        }
+        catch(SQLException e)
+        {}
 
-//        try
-//        {
-//            ResultSet rs;
-//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
-//            PreparedStatement prepared = connection.prepareStatement(query);
-//            prepared.setInt(1, 0); // what is this
-//            //execute query and put result into result set rs
-//            rs = prepared.executeQuery();
-//
-//            //parse result set, adding emails to the ArrayList until result set is empty
-//            while (rs.next())
-//            {
-//                list.add(rs.getString("Email"));
-//            }
-//        }
-//        catch(SQLException e)
-//        {}
-
-        return list;
+        return rs;
     }
 
-    public ArrayList<String> GetCameras()
-    {
-        // TODO: Get actual cameras names from database
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("Camera 1");
-        list.add("Camera 2");
-        list.add("Camera 3");
-
-//        try
-//        {
-//            ResultSet rs;
-//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
-//            PreparedStatement prepared = connection.prepareStatement(query);
-//            prepared.setInt(1, 0); // what is this
-//            //execute query and put result into result set rs
-//            rs = prepared.executeQuery();
-//
-//            //parse result set, adding emails to the ArrayList until result set is empty
-//            while (rs.next())
-//            {
-//                list.add(rs.getString("Email"));
-//            }
-//        }
-//        catch(SQLException e)
-//        {}
-
-        return list;
+    public boolean AuthenticateLogin (String username, String password){
+        try{
+            String query = "SELECT * FROM login WHERE Username = ? AND Password = ?";
+            PreparedStatement prepared = connection.prepareStatement(query);
+            prepared.setString(1, username);
+            prepared.SetString(2, password);
+            //execute query and put result into result set rs
+            rs = prepared.executeQuery();
+            sreturn rs.next();//return 1 if an object exists in resultset (valid user & pass), return 0 if no objects in rs
+        }
+        catch(SQLException e)
+        {}
     }
 
-    public ArrayList<String> GetHives()
+
+    public ResultSet GetHives()
     {
-        // TODO: Get actual hive names from database
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("Hive 1");
-        list.add("Hive 2");
-        list.add("Hive 3");
+        try
+        {
+            ResultSet rs;
+            String query = "SELECT * FROM hiveinfo";
+            PreparedStatement prepared = connection.prepareStatement(query);
+            //execute query and put result into result set rs
+            rs = prepared.executeQuery();
+        }
+        catch(SQLException e)
+        {}
 
-//        try
-//        {
-//            ResultSet rs;
-//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
-//            PreparedStatement prepared = connection.prepareStatement(query);
-//            prepared.setInt(1, 0); // what is this
-//            //execute query and put result into result set rs
-//            rs = prepared.executeQuery();
-//
-//            //parse result set, adding emails to the ArrayList until result set is empty
-//            while (rs.next())
-//            {
-//                list.add(rs.getString("Email"));
-//            }
-//        }
-//        catch(SQLException e)
-//        {}
-
-        return list;
+        return rs;
     }
 
-    public ArrayList<Integer> GetAlertsForHive(int hive)
-    {
-        // TODO: Get actual hive names from database
-        ArrayList<Integer> list = new ArrayList<Integer>();
-        list.add(100);
-        list.add(0);
-        list.add(85);
-        list.add(20);
-
-//        try
-//        {
-//            ResultSet rs;
-//            String query = "SELECT name FROM sensordata WHERE ?"; // yeah idk how the DB is structured...
-//            PreparedStatement prepared = connection.prepareStatement(query);
-//            prepared.setInt(1, 0); // what is this
-//            //execute query and put result into result set rs
-//            rs = prepared.executeQuery();
-//
-//            //parse result set, adding emails to the ArrayList until result set is empty
-//            while (rs.next())
-//            {
-//                list.add(rs.getString("Email"));
-//            }
-//        }
-//        catch(SQLException e)
-//        {}
-
-        return list;
+    public boolean UpdateHives(ResultSet rs){
+        String update = "UPDATE hiveinfo SET Location = ?, Owner = ?, TempLB = ?, TempUB = ?, HumidLB = ?, HumidUB = ?, BlockTime = ? WHERE HiveId = ?";
+        PreparedStatement prepared = connection.prepareStatement(update);
+        while(rs.next()) {
+            prepared.setString(1, rs.getString("Location"));
+            prepared.SetString(2, rs.getString("Owner"));
+            prepared.SetFloat(3, rs.getFloat("TempLB"));
+            prepared.SetFloat(4, rs.getFloat("TempUB"));
+            prepared.SetFloat(5, rs.getFloat("HumidLB"));
+            prepared.SetFloat(6, rs.getFloat("HumidUB"));
+            prepared.SetFloat(7, rs.getFloat("BlockTime"));
+            prepared.SetInt(8, rs.getInt("HiveId"));
+            //execute query and put result into result set rs
+            rs = prepared.executeUpdate();
+        }
     }
 }
