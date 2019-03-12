@@ -34,20 +34,20 @@ public class ChangeAlertBounds extends AppCompatActivity
 
     private void GetAlertsForHive()
     {
-        ArrayList<Integer> alerts = Database.getInstance().GetAlertsForHive(m_hive);
-        if(alerts.size() != 4)
-        {
-            // error
-        }
-        int humidValUB = alerts.get(0);
-        int humidValLB = alerts.get(1);
-        int tempValUB = alerts.get(2);
-        int tempValLB = alerts.get(3);
-
-        EditText hLB = (EditText) findViewById(R.id.humidLB); hLB.setText(String.valueOf(humidValLB));
-        EditText hUB = (EditText) findViewById(R.id.humidUB); hUB.setText(String.valueOf(humidValUB));
-        EditText tLB = (EditText) findViewById(R.id.tempLB); tLB.setText(String.valueOf(tempValLB));
-        EditText tUB = (EditText) findViewById(R.id.tempUB); tUB.setText(String.valueOf(tempValUB));
+//        ArrayList<Integer> alerts = Database.getInstance().GetAlertsForHive(m_hive);
+//        if(alerts.size() != 4)
+//        {
+//            // error
+//        }
+//        int humidValUB = alerts.get(0);
+//        int humidValLB = alerts.get(1);
+//        int tempValUB = alerts.get(2);
+//        int tempValLB = alerts.get(3);
+//
+//        EditText hLB = (EditText) findViewById(R.id.humidLB); hLB.setText(String.valueOf(humidValLB));
+//        EditText hUB = (EditText) findViewById(R.id.humidUB); hUB.setText(String.valueOf(humidValUB));
+//        EditText tLB = (EditText) findViewById(R.id.tempLB); tLB.setText(String.valueOf(tempValLB));
+//        EditText tUB = (EditText) findViewById(R.id.tempUB); tUB.setText(String.valueOf(tempValUB));
 
     }
 

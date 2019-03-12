@@ -26,7 +26,7 @@ public class CameraListActivity extends AppCompatActivity
         setContentView(R.layout.activity_cameralist);
 
         // TODO: Access the database or whatever and list what cameras are available for streaming
-        GetAvailableCameras();
+        GetAvailableHives();
 
     }
 
@@ -42,27 +42,8 @@ public class CameraListActivity extends AppCompatActivity
     };
 
 
-    private void GetAvailableCameras()
+    private void GetAvailableHives()
     {
-        ArrayList<String> sensors = Database.getInstance().GetCameras();
-
-        LinearLayout mainLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        ScrollView scrollView = new ScrollView(this);
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.addView(scrollView);
-        scrollView.addView(linearLayout);
-        this.addContentView(mainLayout, layoutParams);
-
-        for(int i = 0; i < sensors.size(); i++)
-        {
-            EditText ed = new EditText(this);
-            ed.setText(sensors.get(i));
-            ed.setInputType(0);
-            ed.setOnClickListener(myhandler1);
-            linearLayout.addView(ed);
-        }
 
     }
 }

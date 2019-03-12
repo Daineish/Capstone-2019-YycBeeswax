@@ -1,6 +1,7 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -72,11 +73,12 @@ public class Database
 
     public ResultSet GetSensorsData(int hiveId, Date startTimeFrame, Date endTimeFrame, String sensorType)
     {
+        ResultSet rs;
         try
-            ResultSet rs;
+        {
             String query = "SELECT * FROM sensordata WHERE hiveId = ? AND Time >= ? AND Time <= ? AND SensorType = ?";
             PreparedStatement prepared = connection.prepareStatement(query);
-            prepared.setInt(1, hiveID);
+            prepared.setInt(1, hiveId);
             prepared.setDate(2, startTimeFrame);
             prepared.setDate(3, endTimeFrame);
             prepared.setString(4, sensorType);
@@ -84,7 +86,7 @@ public class Database
             rs = prepared.executeQuery();
         }
         catch(SQLException e)
-        {return null}//return null if failed to get sensor data
+        {return null;}//return null if failed to get sensor data
 
         return rs;
     }
@@ -94,21 +96,22 @@ public class Database
             String query = "SELECT * FROM login WHERE Username = ? AND Password = ?";
             PreparedStatement prepared = connection.prepareStatement(query);
             prepared.setString(1, username);
-            prepared.SetString(2, password);
+            prepared.setString(2, password);
             //execute query and put result into result set rs
-            rs = prepared.executeQuery();
-            sreturn rs.next();//return 1 if an object exists in resultset (valid user & pass), return 0 if no objects in rs
+            ResultSet rs = prepared.executeQuery();
+            return rs.next();//return 1 if an object exists in resultset (valid user & pass), return 0 if no objects in rs
         }
         catch(SQLException e)
         {}
+        return true;
     }
 
 
     public ResultSet GetHives()
     {
+        ResultSet rs;
         try
         {
-            ResultSet rs;
             String query = "SELECT * FROM hiveinfo";
             PreparedStatement prepared = connection.prepareStatement(query);
             //execute query and put result into result set rs
@@ -126,18 +129,20 @@ public class Database
             PreparedStatement prepared = connection.prepareStatement(update);
             while(rs.next()) {
                 prepared.setString(1, rs.getString("Location"));
-                prepared.SetString(2, rs.getString("Owner"));
-                prepared.SetFloat(3, rs.getFloat("TempLB"));
-                prepared.SetFloat(4, rs.getFloat("TempUB"));
-                prepared.SetFloat(5, rs.getFloat("HumidLB"));
-                prepared.SetFloat(6, rs.getFloat("HumidUB"));
-                prepared.SetFloat(7, rs.getFloat("BlockTime"));
-                prepared.SetInt(8, rs.getInt("HiveId"));
+                prepared.setString(2, rs.getString("Owner"));
+                prepared.setFloat(3, rs.getFloat("TempLB"));
+                prepared.setFloat(4, rs.getFloat("TempUB"));
+                prepared.setFloat(5, rs.getFloat("HumidLB"));
+                prepared.setFloat(6, rs.getFloat("HumidUB"));
+                prepared.setFloat(7, rs.getFloat("BlockTime"));
+                prepared.setInt(8, rs.getInt("HiveId"));
                 //execute update
-                rs = prepared.executeUpdate();
+                prepared.executeUpdate();
             }
         }
         catch(SQLException e)
         {return false;}//failed to successfully update
         return true;//successfully updated
+    }
+
 }

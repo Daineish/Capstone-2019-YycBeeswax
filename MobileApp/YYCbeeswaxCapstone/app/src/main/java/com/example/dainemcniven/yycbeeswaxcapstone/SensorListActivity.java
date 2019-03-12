@@ -46,25 +46,25 @@ public class SensorListActivity extends AppCompatActivity
 
     private void GetAvailableSensors()
     {
-        ArrayList<String> sensors = Database.getInstance().GetSensors();
-
-        LinearLayout mainLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        ScrollView scrollView = new ScrollView(this);
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.addView(scrollView);
-        scrollView.addView(linearLayout);
-        this.addContentView(mainLayout, layoutParams);
-
-        for(int i = 0; i < sensors.size(); i++)
-        {
-            EditText ed = new EditText(this);
-            ed.setText(sensors.get(i));
-            ed.setInputType(0);
-            ed.setOnClickListener(myhandler1);
-            linearLayout.addView(ed);
-        }
+//        ArrayList<String> sensors = Database.getInstance().GetSensors();
+//
+//        LinearLayout mainLayout = new LinearLayout(this);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+//        ScrollView scrollView = new ScrollView(this);
+//        LinearLayout linearLayout = new LinearLayout(this);
+//        linearLayout.setOrientation(LinearLayout.VERTICAL);
+//        mainLayout.addView(scrollView);
+//        scrollView.addView(linearLayout);
+//        this.addContentView(mainLayout, layoutParams);
+//
+//        for(int i = 0; i < sensors.size(); i++)
+//        {
+//            EditText ed = new EditText(this);
+//            ed.setText(sensors.get(i));
+//            ed.setInputType(0);
+//            ed.setOnClickListener(myhandler1);
+//            linearLayout.addView(ed);
+//        }
 
     }
 }
