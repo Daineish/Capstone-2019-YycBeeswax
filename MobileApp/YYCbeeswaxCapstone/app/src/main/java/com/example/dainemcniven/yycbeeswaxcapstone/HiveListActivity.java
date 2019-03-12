@@ -73,6 +73,31 @@ public class HiveListActivity extends AppCompatActivity
                 location.setText("\tLoc: " + hives.getString("Location"));
                 location.setInputType(1); // ??
                 linearLayout.addView(location);
+
+                EditText owner = new EditText(this);
+                owner.setText("\tOwner: " + hives.getString("Owner"));
+                owner.setInputType(1); //?
+                linearLayout.addView(owner);
+
+                EditText tempLB = new EditText(this);
+                tempLB.setText("\tOwner: " + hives.getFloat("TempLB"));
+                tempLB.setInputType(1); //?
+                linearLayout.addView(tempLB);
+
+                EditText tempUB = new EditText(this);
+                tempUB.setText("\tOwner: " + hives.getFloat("TempUB"));
+                tempUB.setInputType(1); //?
+                linearLayout.addView(tempUB);
+
+                EditText humudLB = new EditText(this);
+                humudLB.setText("\tOwner: " + hives.getFloat("HumidLB"));
+                humudLB.setInputType(1); //?
+                linearLayout.addView(humudLB);
+
+                EditText humidUB = new EditText(this);
+                humidUB.setText("\tOwner: " + hives.getFloat("humidUB"));
+                humidUB.setInputType(1); //?
+                linearLayout.addView(humidUB);
             }
         }
         catch(Exception e)
