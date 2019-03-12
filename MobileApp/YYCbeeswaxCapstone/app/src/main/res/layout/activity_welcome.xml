@@ -20,15 +20,17 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/cameraText"
+            <Button
+                android:id="@+id/camerasButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="250dp"
+                android:background="@drawable/bee_grayscale"
                 android:onClick="camerasTextClicked"
                 android:text="Cameras"
-                android:textColor="#000000"
-                android:textSize="62sp" />
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
@@ -37,15 +39,17 @@
                 android:layout_marginTop="0dp"
                 android:background="#000000" />
 
-            <TextView
-                android:id="@+id/sensorsText"
+            <Button
+                android:id="@+id/sensorsButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_height="250dp"
+                android:background="@drawable/sensor_grayscale"
                 android:onClick="sensorsTextClicked"
                 android:text="Sensors"
-                android:textColor="#000000"
-                android:textSize="62sp" />
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <View
                 android:id="@+id/view"
@@ -55,15 +59,16 @@
                 android:layout_marginTop="0dp"
                 android:background="#000000" />
 
-            <TextView
-                android:id="@+id/alertsText"
+            <Button
+                android:id="@+id/alertsButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:onClick="alertsTextClicked"
+                android:layout_height="250dp"
+                android:background="@drawable/alert_grayscale"
                 android:text="Alerts"
-                android:textColor="#000000"
-                android:textSize="62sp" />
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <View
                 android:id="@+id/view2"
@@ -73,18 +78,38 @@
                 android:layout_marginTop="0dp"
                 android:background="#000000" />
 
-            <TextView
-                android:id="@+id/otherText"
+            <Button
+                android:id="@+id/hivesButton"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:onClick="otherTextClicked"
-                android:text="Other"
-                android:textColor="#000000"
-                android:textSize="62sp" />
+                android:layout_height="250dp"
+                android:background="@drawable/hives_grayscale"
+                android:text="Hives"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/black"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <View
                 android:id="@+id/view3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="0dp"
+                android:background="#000000" />
+
+            <Button
+                android:id="@+id/stakeholdersButton"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:background="@drawable/beekeepers_grayscale"
+                android:text="Stakeholders"
+                android:textAlignment="viewStart"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/view4"
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_gravity="center"
