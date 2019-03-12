@@ -47,6 +47,14 @@
             android:name=".OtherActivity"
             android:label="@string/app_name">
         </activity>
+        <activity
+            android:name=".HiveListActivity"
+            android:label="YYCbeeswaxCapstone">
+        </activity>
+        <activity
+            android:name=".HiveInfoActivity"
+            android:label="YYCbeeswaxCapstone">
+        </activity>
     </application>
 
 </manifest>

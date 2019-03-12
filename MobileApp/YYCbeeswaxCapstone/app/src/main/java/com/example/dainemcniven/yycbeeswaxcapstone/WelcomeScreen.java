@@ -21,7 +21,7 @@ public class WelcomeScreen extends AppCompatActivity
 
     }
 
-    public void camerasTextClicked(View v)
+    public void camerasClicked(View v)
     {
         Log.e("note", "camera clicked");
         Intent myIntent = new Intent(WelcomeScreen.this, CameraListActivity.class);
@@ -29,7 +29,7 @@ public class WelcomeScreen extends AppCompatActivity
         WelcomeScreen.this.startActivity(myIntent);
     }
 
-    public void sensorsTextClicked(View v)
+    public void sensorsClicked(View v)
     {
         Log.e("note", "sensors clicked");
         Intent myIntent = new Intent(WelcomeScreen.this, SensorListActivity.class);
@@ -37,7 +37,7 @@ public class WelcomeScreen extends AppCompatActivity
         WelcomeScreen.this.startActivity(myIntent);
     }
 
-    public void alertsTextClicked(View v)
+    public void alertsClicked(View v)
     {
         Log.e("note", "alert clicked");
         Intent myIntent = new Intent(WelcomeScreen.this, AlertsActivity.class);
@@ -45,10 +45,18 @@ public class WelcomeScreen extends AppCompatActivity
         WelcomeScreen.this.startActivity(myIntent);
     }
 
-    public void otherTextClicked(View v)
+    public void hivesClicked(View v)
     {
-        Log.e("note", "other clicked");
-        Intent myIntent = new Intent(WelcomeScreen.this, OtherActivity.class);
+        Log.e("note", "hives clicked");
+        Intent myIntent = new Intent(WelcomeScreen.this, HiveListActivity.class);
+        myIntent.putExtra("key", ""); //Optional parameters
+        WelcomeScreen.this.startActivity(myIntent);
+    }
+
+    public void stClicked(View v)
+    {
+        Log.e("note", "stakeholders clicked");
+        Intent myIntent = new Intent(WelcomeScreen.this, HiveListActivity.class);
         myIntent.putExtra("key", ""); //Optional parameters
         WelcomeScreen.this.startActivity(myIntent);
     }
