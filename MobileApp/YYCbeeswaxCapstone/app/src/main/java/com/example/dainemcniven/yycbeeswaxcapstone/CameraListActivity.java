@@ -1,13 +1,18 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
+import android.content.Intent;
+import android.graphics.Camera;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -25,8 +30,8 @@ public class CameraListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cameralist);
 
-        // TODO: Access the database or whatever and list what cameras are available for streaming
-        GetAvailableHives();
+        // TODO: Somehow have a list of cameras somewhere that are available to be streamed?
+        GetAvailableCameras();
 
     }
 
@@ -35,15 +40,42 @@ public class CameraListActivity extends AppCompatActivity
         public void onClick(View v)
         {
             EditText sender = (EditText)v;
-            String dbSensor = sender.getText().toString();
-            // TODO: Open up stream or something
-            Log.e("a", "Camera: " + dbSensor);
+            int cam = Integer.parseInt(sender.getTag().toString());
+
+            Log.e("a", "Camera: " + cam);
+            Intent myIntent = new Intent(CameraListActivity.this, ShowCameraActivity.class);
+            myIntent.putExtra("CAMERA_ID", cam); //Optional parameters
+            CameraListActivity.this.startActivity(myIntent);
         }
     };
 
 
-    private void GetAvailableHives()
+    private void GetAvailableCameras()
     {
+        LinearLayout mainLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        ScrollView scrollView = new ScrollView(this);
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        mainLayout.addView(scrollView);
+        scrollView.addView(linearLayout);
+        this.addContentView(mainLayout, layoutParams);
 
+        for(int i = 0; i < 2; i++)
+        {
+            TextView cam0 = new TextView(this);
+            cam0.setText("Camera " + i);
+            cam0.setOnClickListener(myhandler1);
+            cam0.setTag(i);
+            linearLayout.addView(cam0);
+
+            View v = new View(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            params.gravity = Gravity.CENTER;
+            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = 2;
+            v.setBackgroundColor(Color.BLACK);
+            v.setLayoutParams(params);
+        }
     }
 }
