@@ -59,25 +59,25 @@
                 android:layout_marginTop="0dp"
                 android:background="#000000" />
 
-            <Button
-                android:id="@+id/alertsButton"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:background="@drawable/alert_grayscale"
-                android:onClick="alertsClicked"
-                android:text="Alerts"
-                android:textAlignment="viewStart"
-                android:textColor="@color/yellow"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+            <!--<Button-->
+                <!--android:id="@+id/alertsButton"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="250dp"-->
+                <!--android:background="@drawable/alert_grayscale"-->
+                <!--android:onClick="alertsClicked"-->
+                <!--android:text="Alerts"-->
+                <!--android:textAlignment="viewStart"-->
+                <!--android:textColor="@color/yellow"-->
+                <!--android:textSize="24sp"-->
+                <!--android:textStyle="bold" />-->
 
-            <View
-                android:id="@+id/view2"
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="0dp"
-                android:background="#000000" />
+            <!--<View-->
+                <!--android:id="@+id/view2"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="2dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginTop="0dp"-->
+                <!--android:background="#000000" />-->
 
             <Button
                 android:id="@+id/hivesButton"
@@ -103,7 +103,7 @@
                 android:id="@+id/stakeholdersButton"
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
-                android:background="@drawable/beekeepers_grayscale"
+                android:background="@drawable/beekeeper_grayscale"
                 android:onClick="stClicked"
                 android:text="Stakeholders"
                 android:textAlignment="viewStart"

@@ -35,7 +35,7 @@
                 android:layout_column="1"
                 android:layout_columnSpan="1"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="number"
                 android:text="null"
                 android:textColor="@android:color/black" />
 
@@ -60,7 +60,7 @@
                 android:layout_column="1"
                 android:layout_columnSpan="1"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="textShortMessage"
                 android:text="null"
                 android:textColor="@android:color/black" />
 
@@ -110,7 +110,7 @@
                 android:layout_column="1"
                 android:layout_columnSpan="1"
                 android:ems="10"
-                android:inputType="textPersonName"
+                android:inputType="numberDecimal"
                 android:text="null"
                 android:textColor="@android:color/black" />
 
@@ -211,7 +211,7 @@
                 android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:inputType="numberSigned"
+                android:inputType="numberSigned|numberDecimal"
                 android:text="000"
                 android:textColor="#000000" />
 
@@ -236,7 +236,7 @@
                 android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:inputType="numberSigned"
+                android:inputType="numberSigned|numberDecimal"
                 android:text="000"
                 android:textColor="#000000" />
 
