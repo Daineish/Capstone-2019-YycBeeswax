@@ -56,7 +56,7 @@ public class WelcomeScreen extends AppCompatActivity
     public void stClicked(View v)
     {
         Log.e("note", "stakeholders clicked");
-        Intent myIntent = new Intent(WelcomeScreen.this, HiveListActivity.class);
+        Intent myIntent = new Intent(WelcomeScreen.this, StakeholdersActivity.class);
         myIntent.putExtra("key", ""); //Optional parameters
         WelcomeScreen.this.startActivity(myIntent);
     }
