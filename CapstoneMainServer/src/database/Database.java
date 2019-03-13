@@ -6,20 +6,23 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Database {
 
 	private Connection connection;
+	private NotificationHandler handler;
 	
-	//TODO move these values into a external config file
+	//TODO move these values into a external config file that is read on database initialization
 	private String db = "jdbc:mysql://localhost:3306/capstone_db";
 	private String username = "root";
 	private String password = "capstone";
+	private String from = "hivenotificationalert@gmail.com";
+	private String fromPass = "Capstone2019";
 	
 	
 	public Database()
 	{
+		handler = new NotificationHandler(from, fromPass);
 		initializeConnection();
 	}
 	
@@ -52,29 +55,54 @@ public class Database {
 		}
 	}
 	
+	
 	/**
-     * Gets the list of stakeholders from the database who are watching the hive with HiveID.
-     * @param hiveID - the hiveID where the data is coming from.
-     * @return the list of stakeholders in an ArrayList, or return a null if an error is detected
+     * Gets the BlockageThreshhold for a given hiveID, needed PCB side to know when to send alerts on blockage
+     * @param hiveID - the hiveID of the PCB starting up
+     * @return the BlockTime from the database, return -1 on error
      */
-	public ArrayList<String> getStakeholderEmail(int HiveID){
+	public float getBlockTime(int HiveID){
 		try
 		{
 			ResultSet rs;
-			ArrayList<String> emailList = new ArrayList<String>();
-			
 			//build query to be executed
-			String query = "SELECT stakeholder.Email FROM stakeholder INNER JOIN watching ON stakeholder.Name = watching.Name WHERE watching.HiveID = ?";
+			String query = "SELECT BlockTime FROM hiveinfo WHERE watching.HiveID = ?";
 			PreparedStatement prepared = connection.prepareStatement(query);
 			prepared.setInt(1, HiveID);
 			//execute query and put result into result set rs
 			rs = prepared.executeQuery();
 			
-			//parse result set, adding emails to the ArrayList until result set is empty
-			while(rs.next()){
-				emailList.add(rs.getString("Email"));
-			}
-			return emailList;
+			//check if result set has a result, return the BlockTime of the result
+			rs.next();
+			return rs.getFloat("BlockTime");
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return -1;//error occurred
+		}
+	}
+	
+	/**
+     * Gets the list of stakeholders and their notificationTypes from the database who are watching the hive with HiveID.
+     * @param hiveID - the hiveID where the data is coming from.
+     * @return the list of stakeholders emails and notificationTypes in a ResultSet, or return a null if an error is detected
+     */
+	public ResultSet getStakeholderEmail(int HiveID){
+		try
+		{
+			ResultSet rs;
+			//ArrayList<String> emailList = new ArrayList<String>();
+			
+			//build query to be executed
+			//get email and notification type for stakeholders watching the hive who's notificationType isn't set to NONE
+			String query = "SELECT stakeholder.Email, watching.NotificationType FROM stakeholder INNER JOIN watching ON stakeholder.Name = watching.Name WHERE watching.HiveID = ? AND watching.NotificationType != ?";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			prepared.setInt(1, HiveID);
+			prepared.setString(2, "NONE");
+			//execute query and put result into result set rs
+			rs = prepared.executeQuery();
+			return rs;
 		}
 		catch (SQLException e) 
 		{
@@ -84,7 +112,7 @@ public class Database {
 	}
 	
 	/**
-     * performs a threshold check on parameter data, notifying stakeholders of failed check and stores the data in the database regardless
+     * requests a threshold check, notifying stakeholders of failed check and stores the data in the database regardless
      * @param hiveID - the hiveID where the data is coming from.
      * @param temp  - the temperature to send.
      * @param humid - the humidity to send.
@@ -96,9 +124,8 @@ public class Database {
 			//perform check to see if notification required
 			String checkResult = thresholdCheck(hiveId, temp, humid);
 			if(!checkResult.equals("passed")){
-				NotificationHandler handler = new NotificationHandler();
-				ArrayList<String> list = getStakeholderEmail(hiveId);
-				handler.notifyStakeholders(list, checkResult, hiveId);
+				ResultSet list = getStakeholderEmail(hiveId);
+				handler.notifyStakeholders(list, hiveId, checkResult, temp, humid, 0);
 			}
 			
 			//prepared statement for security AND for ease of reading
@@ -129,10 +156,15 @@ public class Database {
 		}
 	}
 	
-	//returns "passed" if it passes check, else, generates the notification msg
-	public String thresholdCheck(int hiveId, float temp, float humidity)throws SQLException{
-		boolean passedCheck = true;
-		String msg = "";
+	/**
+     * performs a threshold check on temp and humidity against the database sensor bounds
+     * @param hiveID - the hiveID where the data is coming from.
+     * @param temp  - the temperature to check.
+     * @param humid - the humidity to check
+     * @return returns passed if no bounds were exceded, otherwise, returns T, H, or TH corresponding to the exceeded bounds
+     */
+	public String thresholdCheck(int hiveId, float temp, float humid)throws SQLException{
+		int notificationCase = 0;//used to track what values failed the check
 		ResultSet rs;
 		String query = "SELECT * FROM hiveinfo WHERE HiveId = ?";
 		PreparedStatement prepared = connection.prepareStatement(query);
@@ -141,26 +173,28 @@ public class Database {
 		rs.next();
 		//check if temperature is within bounds
 		if(temp > rs.getFloat("TempUB") || temp < rs.getFloat("TempLB")){
-			msg += "Anomalous Temperature of " + temp + "°C detected in hive #" + hiveId + "\n";
-			passedCheck = false;
+			notificationCase += 1;
 		}
 		//check if humidity is within bounds
-		if(humidity > rs.getFloat("HumidUB") || humidity < rs.getFloat("HumidLB")){
-			msg += "Anomalous Humidity of " + humidity + "% detected in hive #" + hiveId + "\n";
-			passedCheck = false;
+		if(humid > rs.getFloat("HumidUB") || humid < rs.getFloat("HumidLB")){
+			notificationCase += 2;
 		}
-		if (passedCheck) return "passed";
-		else return msg;
+		//0 = all passed, 1 = temp failed, 2 = humidity failed, 3 = both failed, default to passed
+		switch(notificationCase){
+			case 0:
+				return "passed";
+			case 1:
+				return "T";
+			case 2:
+				return "H";
+			case 3:
+				return "TH";
+			default:
+				return "passed";
+		}
 	}
 	
 	public static void main(String[] args){
-		Database db = new Database();
-		//ArrayList<String> myList = db.getStakeholderEmail(20);
-		//System.out.println(myList.toString());
-		boolean result = db.storeSensorData(20, 65, 90);
-		System.out.println(result);
-		db.closeConnection();
-		System.out.println("connection closed, goodbye");
 	}
 	
 }
