@@ -15,13 +15,113 @@
             android:layout_height="match_parent">
 
             <TextView
+                android:id="@+id/hiveTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Hive ID:"
+                android:textColor="@android:color/black"
+                android:textSize="32dp" />
+
+            <EditText
+                android:id="@+id/hiveText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="null"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/locationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Location:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/locationText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="null"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/ownerTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Owner:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/ownerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_rowSpan="1"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="null"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/blockTimeTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Block Time:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <EditText
+                android:id="@+id/blockTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_rowSpan="1"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="null"
+                android:textColor="@android:color/black" />
+
+            <TextView
                 android:id="@+id/editText2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="4"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="2"
-                android:layout_row="0"
-                android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Humidity"
                 android:textColor="#000000"
@@ -31,10 +131,10 @@
                 android:id="@+id/editText3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
-                android:layout_row="1"
-                android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Lower Bound:"
                 android:textColor="#000000"
@@ -44,22 +144,22 @@
                 android:id="@+id/humidLB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:layout_row="1"
-                android:layout_rowSpan="1"
                 android:inputType="numberDecimal"
-                android:textColor="#000000"
-                android:text="000" />
+                android:text="000"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/editText5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="6"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
-                android:layout_row="2"
-                android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Upper Bound:"
                 android:textColor="#000000"
@@ -69,22 +169,22 @@
                 android:id="@+id/humidUB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="7"
+                android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:layout_row="2"
-                android:layout_rowSpan="1"
                 android:inputType="numberDecimal"
-                android:textColor="#000000"
-                android:text="000" />
+                android:text="000"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/editText7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="7"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="2"
-                android:layout_row="3"
-                android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Temperature"
                 android:textColor="#000000"
@@ -94,10 +194,10 @@
                 android:id="@+id/editText9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="8"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
-                android:layout_row="4"
-                android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Lower Bound:"
                 android:textColor="#000000"
@@ -107,22 +207,22 @@
                 android:id="@+id/tempLB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="8"
+                android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:layout_row="4"
-                android:layout_rowSpan="1"
                 android:inputType="numberSigned"
-                android:textColor="#000000"
-                android:text="000" />
+                android:text="000"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/editText10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="9"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
-                android:layout_row="5"
-                android:layout_rowSpan="1"
                 android:inputType="none"
                 android:text="Upper Bound:"
                 android:textColor="#000000"
@@ -132,48 +232,48 @@
                 android:id="@+id/tempUB"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="9"
+                android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:layout_row="5"
-                android:layout_rowSpan="1"
                 android:inputType="numberSigned"
-                android:textColor="#000000"
-                android:text="000" />
+                android:text="000"
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/resetButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="10"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
                 android:layout_gravity="right"
-                android:layout_row="6"
-                android:layout_rowSpan="1"
-                android:onClick="resetButtonClicked"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Reset" />
+                android:onClick="resetButtonClicked"
+                android:text="Reset"
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/saveButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="10"
+                android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:layout_row="6"
-                android:layout_rowSpan="1"
-                android:onClick="saveButtonClicked"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Save" />
+                android:onClick="saveButtonClicked"
+                android:text="Save"
+                android:textColor="#000000" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
+                android:layout_row="11"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="2"
-                android:layout_row="7"
-                android:layout_rowSpan="1"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
@@ -183,27 +283,27 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="12"
+                android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
                 android:layout_gravity="center_vertical|center_horizontal"
-                android:layout_row="8"
-                android:layout_rowSpan="1"
-                android:textSize="32dp"
+                android:text="Alerts:"
                 android:textColor="#000000"
-                android:text="Alerts:" />
+                android:textSize="32dp" />
 
             <ToggleButton
                 android:id="@+id/alertsOnOff"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_row="12"
+                android:layout_rowSpan="2"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
-                android:layout_row="8"
-                android:layout_rowSpan="2"
-                android:onClick="AlertsOnOffClicked"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="ToggleButton" />
+                android:onClick="AlertsOnOffClicked"
+                android:text="ToggleButton"
+                android:textColor="#000000" />
 
         </GridLayout>
     </ScrollView>

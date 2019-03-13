@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by dainemcniven on 2019-03-07.
@@ -143,6 +144,27 @@ public class Database
         catch(SQLException e)
         {return false;}//failed to successfully update
         return true;//successfully updated
+    }
+
+    public boolean UpdateHives(String loc, String owner, float tempLB, float tempUB, float humidLB, float humidUB, float blockTime, int id)
+    {
+        try
+        {
+            String update = "UPDATE hiveinfo SET Location = ?, Owner = ?, TempLB = ?, TempUB = ?, HumidLB = ?, HumidUB = ?, BlockTime = ? WHERE HiveId = ?";
+            PreparedStatement prepared = connection.prepareStatement(update);
+            prepared.setString(1, loc);
+            prepared.setString(2, owner);
+            prepared.setFloat(3, tempLB);
+            prepared.setFloat(4, tempUB);
+            prepared.setFloat(5, humidLB);
+            prepared.setFloat(6, humidUB);
+            prepared.setFloat(7, blockTime);
+            prepared.setInt(8, id);
+            // execute update
+            prepared.executeUpdate();
+        }
+        catch(SQLException e) { return false; }
+        return true;
     }
 
 }
