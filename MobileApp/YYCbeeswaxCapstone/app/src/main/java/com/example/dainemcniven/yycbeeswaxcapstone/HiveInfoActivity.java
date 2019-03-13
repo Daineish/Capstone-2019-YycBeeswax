@@ -78,15 +78,14 @@ public class HiveInfoActivity extends AppCompatActivity
         }
         catch(Exception e)
         {}
-        // TODO: Add set/cancel buttons and integrate them
     }
 
-    private void resetButtonClicked(View v)
+    public void resetButtonClicked(View v)
     {
         ShowHiveInfo();
     }
 
-    private void saveButtonClicked(View v)
+    public void saveButtonClicked(View v)
     {
         String loc = m_location.getText().toString();
         String own = m_owner.getText().toString();
@@ -100,7 +99,7 @@ public class HiveInfoActivity extends AppCompatActivity
         Database.getInstance().UpdateHives(loc,own,tmlb,tmub,hmlb,hmub,bltm,hiveId);
     }
 
-    private void AlertsOnOffClicked(View v)
+    public void AlertsOnOffClicked(View v)
     {
 
     }

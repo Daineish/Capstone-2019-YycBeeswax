@@ -52,7 +52,6 @@ public class SensorListActivity extends AppCompatActivity
         }
     };
 
-
     private void GetAvailableSensors()
     {
         ResultSet hives = Database.getInstance().GetHives();

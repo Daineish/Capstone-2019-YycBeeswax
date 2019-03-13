@@ -119,7 +119,7 @@ public class SensorDetailsActivity extends AppCompatActivity
         {}
     }
 
-    private void updateButtonClicked(View v)
+    public void updateButtonClicked(View v)
     {
         // get calendar date
         CalendarView calV = (CalendarView) findViewById(R.id.calendarView);
