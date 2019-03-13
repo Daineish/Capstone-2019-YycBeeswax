@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class HiveInfoActivity extends AppCompatActivity
 {
-    private int m_selectedHive = -1;
+    private int m_selectedHive;
     private EditText m_hiveId;
     private EditText m_location;
     private EditText m_owner;
@@ -33,7 +33,7 @@ public class HiveInfoActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alertbounds);
-        m_selectedHive = Integer.parseInt(getIntent().getStringExtra("HIVE_ID"));
+        m_selectedHive = getIntent().getIntExtra("HIVE_ID", -1);
         if(m_selectedHive == -1)
         {
             //TODO: error
@@ -47,9 +47,7 @@ public class HiveInfoActivity extends AppCompatActivity
         m_humidUB = (EditText) findViewById(R.id.humidUB);
         m_blockTime = (EditText) findViewById(R.id.blockTimeText);
 
-        // TODO: Access the database or whatever and list what hives are available
         ShowHiveInfo();
-
     }
 
     private void ShowHiveInfo()
