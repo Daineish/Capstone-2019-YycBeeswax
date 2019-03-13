@@ -39,7 +39,7 @@ public class CameraListActivity extends AppCompatActivity
     {
         public void onClick(View v)
         {
-            EditText sender = (EditText)v;
+            TextView sender = (TextView)v;
             int cam = Integer.parseInt(sender.getTag().toString());
 
             Log.e("a", "Camera: " + cam);

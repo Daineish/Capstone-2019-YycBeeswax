@@ -24,7 +24,7 @@ public class ShowCameraActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_showcamera);
-        int cam = Integer.parseInt(getIntent().getStringExtra("HIVE_ID"));
+        int cam = getIntent().getIntExtra("CAMERA_ID", -1);
 
         WebView wb = (WebView) findViewById(R.id.webView1);
 

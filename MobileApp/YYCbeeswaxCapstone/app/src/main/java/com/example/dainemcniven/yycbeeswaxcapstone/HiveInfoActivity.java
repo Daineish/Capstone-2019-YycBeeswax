@@ -93,7 +93,7 @@ public class HiveInfoActivity extends AppCompatActivity
         float tmub = Float.valueOf(m_tempUB.getText().toString());
         float hmlb = Float.valueOf(m_humidLB.getText().toString());
         float hmub = Float.valueOf(m_humidUB.getText().toString());
-        float bltm = 0.0f;//Float.valueOf()
+        float bltm = Float.valueOf(m_blockTime.getText().toString());
         int hiveId = Integer.valueOf(m_hiveId.getText().toString());
 
         Database.getInstance().UpdateHives(loc,own,tmlb,tmub,hmlb,hmub,bltm,hiveId);
