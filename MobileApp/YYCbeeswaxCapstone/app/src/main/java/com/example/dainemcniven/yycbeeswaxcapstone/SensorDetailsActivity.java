@@ -77,7 +77,7 @@ public class SensorDetailsActivity extends AppCompatActivity
         m_mainLayout.addView(scrollView);
         scrollView.addView(linearLayout);
         this.addContentView(m_mainLayout, layoutParams);
-
+// HiveId, Time, SensorType, SensorData
         try
         {
             TextView tempTitle = new TextView(this);
