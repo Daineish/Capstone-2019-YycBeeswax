@@ -53,7 +53,11 @@ public class DatePickerFragment extends DialogFragment
         final Activity activity = getActivity();
         if (activity instanceof DialogInterface.OnDismissListener)
         {
-            ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+            try
+            {
+                ((DialogInterface.OnDismissListener) activity).onDismiss(dialog);
+            }
+            catch(Exception e){}
         }
     }
 }
