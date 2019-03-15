@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/yellow"
     android:orientation="vertical">
 
     <ScrollView
@@ -67,9 +68,10 @@
                 android:layout_height="wrap_content"
                 android:layout_row="2"
                 android:layout_column="1"
-                android:ems="10"
+                android:layout_marginLeft="20dp"
                 android:inputType="none"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/endTimeText"
@@ -77,9 +79,10 @@
                 android:layout_height="wrap_content"
                 android:layout_row="4"
                 android:layout_column="1"
-                android:ems="10"
+                android:layout_marginLeft="20dp"
                 android:inputType="none"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/startDateText"
@@ -87,9 +90,10 @@
                 android:layout_height="wrap_content"
                 android:layout_row="1"
                 android:layout_column="1"
-                android:ems="10"
+                android:layout_marginLeft="20dp"
                 android:inputType="none"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
 
             <Button
                 android:id="@+id/startTimeButton"
@@ -98,6 +102,8 @@
                 android:layout_row="2"
                 android:layout_column="2"
                 android:onClick="showTimePickerDialog"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Pick Time" />
 
             <Button
@@ -107,6 +113,8 @@
                 android:layout_row="1"
                 android:layout_column="2"
                 android:onClick="showDatePickerDialog"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Pick Date" />
 
             <Button
@@ -116,6 +124,8 @@
                 android:layout_row="3"
                 android:layout_column="2"
                 android:onClick="showDatePickerDialog"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Pick Date" />
 
             <Button
@@ -125,6 +135,8 @@
                 android:layout_row="4"
                 android:layout_column="2"
                 android:onClick="showTimePickerDialog"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Pick Time" />
 
             <TextView
@@ -146,9 +158,10 @@
                 android:layout_height="wrap_content"
                 android:layout_row="3"
                 android:layout_column="1"
-                android:ems="10"
+                android:layout_marginLeft="20dp"
                 android:inputType="none"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="18dp" />
 
             <TextView
                 android:id="@+id/time2Title"
@@ -193,6 +206,8 @@
                 android:layout_column="0"
                 android:layout_columnSpan="1"
                 android:onClick="showButtonClicked"
+                android:textColor="#000000"
+                android:background="#ffffff"
                 android:text="Show" />
 
         </GridLayout>
