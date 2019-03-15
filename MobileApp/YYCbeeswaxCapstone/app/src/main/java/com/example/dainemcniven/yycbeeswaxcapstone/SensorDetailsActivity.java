@@ -1,6 +1,10 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
@@ -11,39 +15,65 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewManager;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import java.sql.Date;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by dainemcniven on 2019-03-07.
  */
 
-public class SensorDetailsActivity extends AppCompatActivity
+public class SensorDetailsActivity extends AppCompatActivity implements DialogInterface.OnDismissListener
 {
     private int m_selectedHive;
     private LinearLayout m_mainLayout = null;
+    private TextView m_startDate;
+    private TextView m_endDate;
+    private TextView m_startTime;
+    private TextView m_endTime;
+    private Spinner m_hiveSpinner;
+    private Spinner m_sensorSpinner;
+
+    private DatePickerFragment m_datePicker;
+    private TimePickerFragment m_timePicker;
+    private boolean m_isStartTime = false;
+    private boolean m_isStartDate = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensordetails);
-        m_selectedHive = Integer.parseInt(getIntent().getStringExtra("HIVE_ID"));
+        //m_selectedHive = Integer.parseInt(getIntent().getStringExtra("HIVE_ID"));
+        m_startDate = (TextView)findViewById(R.id.startDateText);
+        m_endDate = (TextView)findViewById(R.id.endDateText);
+        m_startTime = (TextView)findViewById(R.id.startTimeText);
+        m_endTime = (TextView)findViewById(R.id.endTimeText);
+        m_hiveSpinner = (Spinner)findViewById(R.id.hiveSpinner);
+        m_sensorSpinner = (Spinner)findViewById(R.id.sensorsSpinner);
+        InitializeViews();
 
         // TODO: default is 24hrs up until now?
-        java.util.Date curDate = new java.util.Date();
-        Date end = new java.sql.Date(curDate.getTime());
-        GregorianCalendar cal = new GregorianCalendar(); cal.setTime(end); cal.add(Calendar.DAY_OF_YEAR, -1);
-        Date start = new java.sql.Date(cal.getTime().getTime());
-        GetAvailableSensors(start, end);
+
+        //GetAvailableSensors(start, end);
 
         // access the database and see what sensor data is available,
         // have some sort of list or something? then when you click on one you
@@ -58,6 +88,41 @@ public class SensorDetailsActivity extends AppCompatActivity
         }
     };
 
+    private void InitializeViews()
+    {
+        // Default to the last 24 hours
+        SimpleDateFormat dateF = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+        SimpleDateFormat timeF = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        String date = dateF.format(Calendar.getInstance().getTime());
+        String time = timeF.format(Calendar.getInstance().getTime());
+        Calendar cal = Calendar.getInstance();//.add(Calendar.DAY_OF_YEAR, -1);
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        String date2 = dateF.format(cal.getTime());
+        String time2 = timeF.format(cal.getTime());
+
+        m_startDate.setText(date2);
+        m_startTime.setText(time2);
+        m_endDate.setText(date);
+        m_endTime.setText(time);
+
+        // Add sensor types
+        List<String> spinnerArray =  new ArrayList<>();
+        spinnerArray.add("Temperature");
+        spinnerArray.add("Humidity");
+        spinnerArray.add("Both");
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                this, android.R.layout.simple_spinner_item, spinnerArray);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        m_sensorSpinner.setAdapter(adapter);
+
+        // Add available hives
+        //List<Integer> hiveArray = Utils.Utilities.GetAllHiveIds();
+        List<Integer> hiveArray = new ArrayList<>(); hiveArray.add(1);
+        ArrayAdapter<Integer> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hiveArray);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        m_hiveSpinner.setAdapter(adapter1);
+    }
 
     private void GetAvailableSensors(java.sql.Date start, java.sql.Date end)
     {
@@ -119,14 +184,89 @@ public class SensorDetailsActivity extends AppCompatActivity
         {}
     }
 
-    public void updateButtonClicked(View v)
+    public void showButtonClicked(View v)
     {
-        // get calendar date
-        CalendarView calV = (CalendarView) findViewById(R.id.calendarView);
-        java.sql.Date start = new java.sql.Date(calV.getDate());
-        GregorianCalendar gCal = new GregorianCalendar();
-        gCal.setTime(start); gCal.add(Calendar.DAY_OF_YEAR, 1);
-        Date end = new java.sql.Date(gCal.getTime().getTime());
-        GetAvailableSensors(start, end);
+        int hiveId = Integer.valueOf(m_hiveSpinner.getSelectedItem().toString());
+        String sensor = m_sensorSpinner.getSelectedItem().toString();
+
+        String dtStart = m_startDate.getText().toString() + " " + m_startTime.getText().toString();
+        String dtEnd = m_endDate.getText().toString() + " " + m_endTime.getText().toString();
+        SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy HH:mm");
+
+        try
+        {
+            java.util.Date dateS = format.parse(dtStart);
+            java.util.Date dateE = format.parse(dtEnd);
+            Log.e("", dateS.toString());
+            Log.e("", dateE.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //ResultSet results = Database.getInstance().GetSensorsData(hiveId,dateS,dateE,sensor);
+    }
+
+    public void showTimePickerDialog(View v)
+    {
+        if(v.getId() == R.id.startTimeButton)
+            m_isStartTime = true;
+        else if(v.getId() == R.id.endTimeButton)
+            m_isStartTime = false;
+        else
+        {
+            Log.e("uh-oh", "Unknown button pressed");
+            System.exit(1);
+        }
+        m_timePicker = new TimePickerFragment();
+        m_timePicker.show(getFragmentManager(), "timePicker");
+    }
+
+    public void showDatePickerDialog(View v)
+    {
+        if(v.getId() == R.id.startDateButton)
+            m_isStartDate = true;
+        else if(v.getId() == R.id.endDateButton)
+            m_isStartDate = false;
+        else
+        {
+            Log.e("uh-oh", "Unknown button pressed");
+            System.exit(1);
+        }
+
+        m_datePicker = new DatePickerFragment();
+        m_datePicker.show(getFragmentManager(), "datePicker");
+    }
+
+    @Override
+    public void onDismiss(final DialogInterface dialog)
+    {
+        if(dialog instanceof android.app.TimePickerDialog)
+        {
+            SimpleDateFormat timeF = new SimpleDateFormat("HH:mm");
+            String date = m_timePicker.m_hour + ":" + m_timePicker.m_minute;
+            java.util.Date d;
+            try { d = timeF.parse(date); }
+            catch(ParseException e) { d = new java.util.Date(); }
+
+            if(m_isStartTime)
+                m_startTime.setText(timeF.format(d));
+            else
+                m_endTime.setText(timeF.format(d));
+
+        }
+        else if(dialog instanceof android.app.DatePickerDialog)
+        {
+            SimpleDateFormat dateF = new SimpleDateFormat("MMM d, yyyy");
+            String monthString = new DateFormatSymbols().getShortMonths()[m_datePicker.m_month];
+            String date = monthString + " " + m_datePicker.m_day + ", " + m_datePicker.m_year;
+            java.util.Date d;
+            try { d = dateF.parse(date); }
+            catch(ParseException e) { d = new java.util.Date(); }
+
+            if(m_isStartDate)
+                m_startDate.setText(dateF.format(d));
+            else
+                m_endDate.setText(dateF.format(d));
+        }
     }
 }

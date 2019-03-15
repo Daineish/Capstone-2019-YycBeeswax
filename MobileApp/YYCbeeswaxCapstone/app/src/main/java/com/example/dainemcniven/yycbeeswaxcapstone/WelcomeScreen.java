@@ -32,7 +32,7 @@ public class WelcomeScreen extends AppCompatActivity
     public void sensorsClicked(View v)
     {
         Log.e("note", "sensors clicked");
-        Intent myIntent = new Intent(WelcomeScreen.this, SensorListActivity.class);
+        Intent myIntent = new Intent(WelcomeScreen.this, SensorDetailsActivity.class);
         myIntent.putExtra("key", ""); //Optional parameters
         WelcomeScreen.this.startActivity(myIntent);
     }

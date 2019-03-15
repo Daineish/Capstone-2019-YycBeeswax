@@ -1,18 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <CalendarView
-        android:id="@+id/calendarView"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="285dp" />
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/updateButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="updateButtonClicked"
-        android:text="Update" />
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/hiveTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Hive:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <Spinner
+                android:id="@+id/hiveSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="0"
+                android:layout_rowSpan="1"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:theme="@style/AppTheme" />
+
+            <TextView
+                android:id="@+id/date1Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Start Date:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp"
+                android:theme="@style/AppTheme" />
+
+            <TextView
+                android:id="@+id/time1Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Start Time:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/startTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:ems="10"
+                android:inputType="none"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/endTimeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="4"
+                android:layout_column="1"
+                android:ems="10"
+                android:inputType="none"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/startDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:ems="10"
+                android:inputType="none"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/startTimeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="2"
+                android:layout_column="2"
+                android:onClick="showTimePickerDialog"
+                android:text="Pick Time" />
+
+            <Button
+                android:id="@+id/startDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_column="2"
+                android:onClick="showDatePickerDialog"
+                android:text="Pick Date" />
+
+            <Button
+                android:id="@+id/endDateButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_column="2"
+                android:onClick="showDatePickerDialog"
+                android:text="Pick Date" />
+
+            <Button
+                android:id="@+id/endTimeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="4"
+                android:layout_column="2"
+                android:onClick="showTimePickerDialog"
+                android:text="Pick Time" />
+
+            <TextView
+                android:id="@+id/date2Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="End Date:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp"
+                android:theme="@style/AppTheme" />
+
+            <TextView
+                android:id="@+id/endDateText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="3"
+                android:layout_column="1"
+                android:ems="10"
+                android:inputType="none"
+                android:textColor="@android:color/black" />
+
+            <TextView
+                android:id="@+id/time2Title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="4"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="End Time:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <TextView
+                android:id="@+id/sensorsTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:text="Sensors:"
+                android:textColor="@android:color/black"
+                android:textSize="24dp" />
+
+            <Spinner
+                android:id="@+id/sensorsSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="5"
+                android:layout_rowSpan="1"
+                android:layout_column="1"
+                android:layout_columnSpan="1"
+                android:theme="@style/AppTheme" />
+
+            <Button
+                android:id="@+id/showButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="6"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:onClick="showButtonClicked"
+                android:text="Show" />
+
+        </GridLayout>
+    </ScrollView>
+
 </LinearLayout>
