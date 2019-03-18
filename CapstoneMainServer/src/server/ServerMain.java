@@ -1,5 +1,7 @@
 package server;
 import database.Database;
+
+import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
@@ -18,6 +20,10 @@ import java.net.Socket;
 public class ServerMain extends ServerSocket
 {
 	private Database db;
+	private boolean m_isBlocked = false;
+	private long m_elapsedTime = 0;
+	private long m_startTime = 0;
+
     public ServerMain(int port) throws java.io.IOException
     {
         super(port);
@@ -31,6 +37,50 @@ public class ServerMain extends ServerSocket
         Socket connectionSocket = accept();
         BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
         return inFromClient.readLine();
+    }
+
+    /**
+     *
+     */
+    public void IsBlocked(int hiveID, boolean blocked)
+    {
+        // TODO: Store blockage data in DB.
+        if(m_isBlocked)
+        {
+            if(blocked)
+            {
+                // was blocked & is still blocked, check time blocked.
+                long elapsed = System.nanoTime() - m_startTime;
+                if(elapsed > db.getBlockTime(hiveID) && db.getBlockTime(hiveID) != -1)
+                {
+                    // Send alert TODO
+
+                    // Reset timer
+                    m_isBlocked = false;
+                    m_startTime = 0;
+
+                }
+            }
+            else
+            {
+                // was blocked & no longer blocked, reset timer
+                m_isBlocked = false;
+                m_startTime = 0;
+            }
+        }
+        else
+        {
+            if(blocked)
+            {
+                // wasn't blocked & is now blocked, start timer
+                m_startTime = System.nanoTime();
+                m_isBlocked = true;
+            }
+            else
+            {
+                // wasn't blocked & still isn't, do nothing
+            }
+        }
     }
 
     /**

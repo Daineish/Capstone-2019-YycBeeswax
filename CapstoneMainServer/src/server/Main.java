@@ -40,6 +40,13 @@ public class Main
                 {
                     Utilities.AssertMessage(false, true, "Video data currently in development");
                 }
+                else if(Utilities.g_irSensor.equals(clientVals[0]))
+                {
+                    Utilities.AssertMessage(clientVals.length == 3, true, "Incorrect number of values received from IR sensor");
+                    boolean blocked = Boolean.parseBoolean(clientVals[2]);
+                    server.IsBlocked(hiveID, blocked);
+
+                }
                 else
                 {
                     Utilities.AssertMessage(false, true, "Unknown data type received: " + clientVals[0]);
