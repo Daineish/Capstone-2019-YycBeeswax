@@ -68,7 +68,7 @@ public class HiveInfoActivity extends AppCompatActivity
                     m_tempUB.setText(String.valueOf(hives.getFloat("TempUB")));
                     m_humidLB.setText(String.valueOf(hives.getFloat("HumidLB")));
                     m_humidUB.setText(String.valueOf(hives.getFloat("HumidUB")));
-                    m_blockTime.setText(String.valueOf(hives.getFloat("BlockTime")));
+                    m_blockTime.setText(String.valueOf(hives.getFloat("BlockTime"))); // minutes?
 
                     break;
                 }
