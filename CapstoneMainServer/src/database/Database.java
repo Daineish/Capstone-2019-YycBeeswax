@@ -1,29 +1,62 @@
 package database;
 
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class Database {
 
 	private Connection connection;
 	private NotificationHandler handler;
-	
+	private String propertiesFileName = "config.properties";//**************
 	//TODO move these values into a external config file that is read on database initialization
-	private String db = "jdbc:mysql://localhost:3306/capstone_db";
-	private String username = "root";
-	private String password = "capstone";
-	private String from = "hivenotificationalert@gmail.com";
-	private String fromPass = "Capstone2019";
+	private String database;// = "jdbc:mysql://localhost:3306/capstone_db";
+	private String username; // = "root";
+	private String password; // = "capstone";
+	private String fromEmail; // = "hivenotificationalert@gmail.com";
+	private String fromPass; // = "Capstone2019";
 	
 	
 	public Database()
 	{
-		handler = new NotificationHandler(from, fromPass);
+		getProperties();
+		handler = new NotificationHandler(fromEmail, fromPass);
 		initializeConnection();
+	}
+	
+	public void getProperties(){
+		InputStream inStream;
+		try{
+			Properties properties = new Properties();
+			inStream = getClass().getClassLoader().getResourceAsStream(propertiesFileName);
+			
+			if(inStream != null){
+				properties.load(inStream);
+			}
+			else {
+				System.err.println("The properties file " + propertiesFileName + " could not be found");
+				System.exit(1);
+			}
+			
+			//load config values from file
+			database = properties.getProperty("database");
+			username = properties.getProperty("username");
+			password = properties.getProperty("password");
+			fromEmail = properties.getProperty("fromEmail");
+			fromPass = properties.getProperty("fromPass");
+			inStream.close();
+			
+		}catch (IOException e){
+			e.printStackTrace();
+			System.exit(1);
+		}
 	}
 	
 	public void initializeConnection()
@@ -31,7 +64,7 @@ public class Database {
 		try 
 		{
 			//attempt to start connection with config file values
-			connection = DriverManager.getConnection(db, username, password);
+			connection = DriverManager.getConnection(database, username, password);
 		} 
 		catch (SQLException e) 
 		{
@@ -156,6 +189,7 @@ public class Database {
 		}
 	}
 	
+	
 	/**
      * performs a threshold check on temp and humidity against the database sensor bounds
      * @param hiveID - the hiveID where the data is coming from.
@@ -195,6 +229,11 @@ public class Database {
 	}
 	
 	public static void main(String[] args){
+		//Database db = new Database();
+		//db.storeSensorData(65, 25, 25);
+		
+		
+		
 	}
 	
 }
