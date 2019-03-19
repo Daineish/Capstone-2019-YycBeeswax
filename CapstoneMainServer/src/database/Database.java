@@ -1,7 +1,10 @@
 package database;
 
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -32,18 +35,12 @@ public class Database {
 	}
 	
 	public void getProperties(){
-		InputStream inStream;
+		
+		FileInputStream inStream;
 		try{
 			Properties properties = new Properties();
-			inStream = getClass().getClassLoader().getResourceAsStream(propertiesFileName);
-			
-			if(inStream != null){
-				properties.load(inStream);
-			}
-			else {
-				System.err.println("The properties file " + propertiesFileName + " could not be found");
-				System.exit(1);
-			}
+			inStream = new FileInputStream("config.properties");
+			properties.load(inStream);
 			
 			//load config values from file
 			database = properties.getProperty("database");
@@ -229,8 +226,8 @@ public class Database {
 	}
 	
 	public static void main(String[] args){
-		//Database db = new Database();
-		//db.storeSensorData(65, 25, 25);
+		Database db = new Database();
+		db.storeSensorData(65, 25, 25);
 		
 		
 		
