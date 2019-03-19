@@ -1,7 +1,5 @@
-
-
 /*
-    This sketch establishes a TCP connection to our server and sends humidity and temperature data.
+    This sketch establishes a TCP connection to our server and sends humidity and temperature and IR data.
 */
 
 #include <ESP8266WiFi.h>
@@ -18,11 +16,8 @@
 #endif
 DHT dht(DHTPIN, DHTTYPE);
 
-// Temperature/Humidity sensor
-const String g_datatype = "TH_SENSOR";
-
-// IR sensor
-const String g_datatype2 = "IR_SENSOR";
+// Temperature/Humidity/IR sensor
+const String g_datatype = "THIR_SENSOR";
 
 // Hive ID (CHANGE FOR EACH HIVE)
 const int g_hiveID = 65;
@@ -40,7 +35,6 @@ void setup()
 {
     Serial.begin(115200);
 
-    // Taken from their code (for IR sensor?)
     dht.begin();
     pinMode(16,INPUT);
     pinMode(14,INPUT);

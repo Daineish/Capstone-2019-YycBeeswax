@@ -8,9 +8,7 @@ public class Utilities
     public static final boolean g_printDebugMessage = true;
 
     // Constants for data types received from devices.
-    public static final String g_temperatureSensor = "TH_SENSOR";
-    public static final String g_videoData = "VIDEO_DATA";
-    public static final String g_irSensor = "IR_SENSOR";
+    public static final String g_tempHumidIrSensor = "THIR_SENSOR";
 
     /**
      * Asserts that b is true, if false it prints msg to System.err if thr is false,

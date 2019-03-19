@@ -52,13 +52,13 @@ public class ServerMain extends ServerSocket
 
                 // was blocked & is still blocked, check time blocked.
                 long elapsed = System.nanoTime() - m_startTime;
-                elapsed /= 1000000000; // 10^9 (?)
+                elapsed /= 1000000000; // 10^9 -> should be in seconds now.
                 System.out.println("Blocked: Checking for alert: " + elapsed);
                 if(db.getBlockTime(hiveID) != -1 && elapsed > db.getBlockTime(hiveID))
                 {
                     // Send alert TODO
                     System.out.println("SEND ALERT");
-
+                    //storeBlockageData(hiveID, elapsed);
 
                     // Reset timer
                     m_isBlocked = false;

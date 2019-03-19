@@ -68,7 +68,8 @@ public class HiveInfoActivity extends AppCompatActivity
                     m_tempUB.setText(String.valueOf(hives.getFloat("TempUB")));
                     m_humidLB.setText(String.valueOf(hives.getFloat("HumidLB")));
                     m_humidUB.setText(String.valueOf(hives.getFloat("HumidUB")));
-                    m_blockTime.setText(String.valueOf(hives.getFloat("BlockTime"))); // minutes?
+                    float blockSec = (hives.getFloat("BlockTime"));
+                    m_blockTime.setText(String.valueOf(blockSec/60.0)); // TODO: minutes (I hope)
 
                     break;
                 }
@@ -93,6 +94,8 @@ public class HiveInfoActivity extends AppCompatActivity
         float hmub = Float.valueOf(m_humidUB.getText().toString());
         float bltm = Float.valueOf(m_blockTime.getText().toString());
         int hiveId = Integer.valueOf(m_hiveId.getText().toString());
+
+        bltm *= 60.0; // TODO: check this works as expected
 
         Database.getInstance().UpdateHives(loc,own,tmlb,tmub,hmlb,hmub,bltm,hiveId);
     }

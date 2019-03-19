@@ -1,4 +1,6 @@
 package server;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.net.InetAddress;
 
 /**
@@ -9,6 +11,17 @@ public class Main
 
     public static void main(String argv[]) throws Exception
     {
+        String current = new java.io.File( "." ).getCanonicalPath();
+        System.out.println(current);
+
+        BufferedReader reader = new BufferedReader(new FileReader("./config.properties"));
+        String line;
+        while ((line = reader.readLine()) != null)
+        {
+            System.out.println(line);
+        }
+        reader.close();
+
         // Open ServerSocket
         ServerMain server = new ServerMain(4444);
         System.out.println(InetAddress.getLocalHost());
@@ -33,7 +46,7 @@ public class Main
             // Should be at least 3 values, one for data type, one for hiveID, one for data.
             Utilities.AssertMessage(clientVals.length >= 4, true, "Numbers of values received from client < 4");
             int hiveID = Integer.parseInt(clientVals[1]);
-            if(Utilities.g_temperatureSensor.equals(clientVals[0]))
+            if(Utilities.g_tempHumidIrSensor.equals(clientVals[0]))
             {
                 // Temperature/Humidity Sensor
                 Utilities.AssertMessage(clientVals.length == 5, true, "Incorrect number of values received from sensors");
