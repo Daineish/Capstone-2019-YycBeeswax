@@ -18,46 +18,40 @@ public class Main
             // Accept the client, receive a string message.
             String clientSentence = server.ReadMessageFromDevice();
             Utilities.PrintMessage("\nReceived: " + clientSentence);
+            ParseData(server, clientSentence);
 
-            try
-            {
-                // Parse client response
-                String[] clientVals = clientSentence.split(" ");
-
-                // Should be at least 3 values, one for data type, one for hiveID, one for data.
-                Utilities.AssertMessage(clientVals.length >= 3, true, "Numbers of values received from client < 3");
-                int hiveID = Integer.parseInt(clientVals[1]);
-                if(Utilities.g_temperatureSensor.equals(clientVals[0]))
-                {
-                    // Temperature/Humidity Sensor
-                    Utilities.AssertMessage(clientVals.length == 4, true, "Incorrect number of values received from temperature/humidity sensor");
-                    float temp = Float.parseFloat(clientVals[2]);
-                    float humid = Float.parseFloat(clientVals[3]);
-                    Utilities.PrintMessage("Hive ID: " + hiveID + "\nTemperature read: " + temp + "\nHumidity read: " + humid);
-                    server.SendTempHumidToDatabase(hiveID, temp, humid);
-                }
-                else if(Utilities.g_videoData.equals(clientVals[0]))
-                {
-                    Utilities.AssertMessage(false, true, "Video data currently in development");
-                }
-                else if(Utilities.g_irSensor.equals(clientVals[0]))
-                {
-                    Utilities.AssertMessage(clientVals.length == 3, true, "Incorrect number of values received from IR sensor");
-                    boolean blocked = Boolean.parseBoolean(clientVals[2]);
-                    server.IsBlocked(hiveID, blocked);
-
-                }
-                else
-                {
-                    Utilities.AssertMessage(false, true, "Unknown data type received: " + clientVals[0]);
-                }
-            }
-            catch(Exception e)
-            {
-                // Catch errors and try again
-                continue;
-            }
         } // endWhile()
+    }
+
+    private static void ParseData(ServerMain server, String clientSentence)
+    {
+        try
+        {
+            // Parse client response
+            String[] clientVals = clientSentence.split(" ");
+
+            // Should be at least 3 values, one for data type, one for hiveID, one for data.
+            Utilities.AssertMessage(clientVals.length >= 4, true, "Numbers of values received from client < 4");
+            int hiveID = Integer.parseInt(clientVals[1]);
+            if(Utilities.g_temperatureSensor.equals(clientVals[0]))
+            {
+                // Temperature/Humidity Sensor
+                Utilities.AssertMessage(clientVals.length == 5, true, "Incorrect number of values received from sensors");
+                float temp = Float.parseFloat(clientVals[2]);
+                float humid = Float.parseFloat(clientVals[3]);
+                boolean blocked = Boolean.parseBoolean(clientVals[4]);
+                server.SendTempHumidToDatabase(hiveID, temp, humid);
+                server.IsBlocked(hiveID, blocked);
+            }
+            else
+            {
+                Utilities.AssertMessage(false, true, "Unknown data type received: " + clientVals[0]);
+            }
+        }
+        catch(Exception e)
+        {
+            // Catch errors and try again
+        }
     }
 
 }
