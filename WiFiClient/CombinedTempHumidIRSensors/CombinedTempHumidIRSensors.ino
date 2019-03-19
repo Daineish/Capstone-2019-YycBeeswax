@@ -13,7 +13,7 @@
 #endif
 
 #ifndef DHTINFO
-#define DHTPIN 4       // what digital pin the DHT22 is conected to
+#define DHTPIN 12       // what digital pin the DHT22 is conected to
 #define DHTTYPE DHT22  // there are multiple kinds of DHT sensors
 #endif
 DHT dht(DHTPIN, DHTTYPE);
@@ -33,7 +33,7 @@ const char* password = STAPSK;
 // This is a temporary hostname to combat dynamic IP addresses
 //const char* host = "testingarduino.hopto.org";
 // Alternatively you could just use an IP address if you know it's static
-const char* host = "172.20.10.7";
+const char* host = "172.20.10.2";
 const uint16_t port = 4444;
 
 void setup()
@@ -100,10 +100,10 @@ void loop()
             return;
         }
 
-        // This will send our data
-        Serial.println("Sending data to server");
+        // This will send our temp & humidity
         if (client.connected())
         {
+            Serial.println("Sending TH data to server");
             float humid = dht.readHumidity();
             float temp = dht.readTemperature();
 
@@ -114,45 +114,15 @@ void loop()
                 return;
             }
 
-            String str = g_datatype + " " + g_hiveID + " " + String(temp) + " " + String(humid);
-            client.println(str);
-
-            String str2 = g_datatype2 + " " + g_hiveID + " ";
+            String str = g_datatype + " " + g_hiveID + " " + String(temp) + " " + String(humid) + " ";
             if((digitalRead(16))==0 && digitalRead(14)==0)
-            {
-                str2 += "1";
-            }
+                str += "false";
             else
-            {
-                str2 += "0";
-            }
-            client.println(str2);
+                str += "true";
+            Serial.println("Sending: " + str);
+            client.println(str);
             rate = 0;
         }
-
-        // wait for data to be available to read from server
-        // TODO: This isn't useful at the moment as the server doesn't send useful info rn.
-//        unsigned long timeout = millis();
-//        while (client.available() == 0)
-//        {
-//            if (millis() - timeout > 5000)
-//            {
-//              Serial.println(">>> Client Timeout !");
-//              client.stop();
-//              delay(60000); // One minute
-//              return;
-//            }
-//        }
-//
-//        // Read all the lines of the reply from server and print them to Serial
-//        Serial.println("Received from remote server: ");
-//        delay(1000); // TODO: this is hacky, if I don't have this we ususally just receive 1 byte...
-//        while (client.available())
-//        {
-//            char ch = static_cast<char>(client.read());
-//            Serial.print(ch);
-//        }
-
         // Close the connection
         Serial.println();
         Serial.println("Closing connection");

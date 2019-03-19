@@ -29,7 +29,7 @@ public class ServerMain extends ServerSocket
         super(port);
         
         // Open Database Connection
-        db = new Database();
+        //db = new Database();
     }
 
     public String ReadMessageFromDevice() throws java.io.IOException
@@ -49,11 +49,16 @@ public class ServerMain extends ServerSocket
         {
             if(blocked)
             {
+
                 // was blocked & is still blocked, check time blocked.
                 long elapsed = System.nanoTime() - m_startTime;
-                if(elapsed > db.getBlockTime(hiveID) && db.getBlockTime(hiveID) != -1)
+                elapsed /= 1000000000; // 10^9 (?)
+                System.out.println("Blocked: Checking for alert: " + elapsed);
+                if(db.getBlockTime(hiveID) != -1 && elapsed > db.getBlockTime(hiveID))
                 {
                     // Send alert TODO
+                    System.out.println("SEND ALERT");
+
 
                     // Reset timer
                     m_isBlocked = false;
@@ -73,6 +78,7 @@ public class ServerMain extends ServerSocket
             if(blocked)
             {
                 // wasn't blocked & is now blocked, start timer
+                System.out.println("Blocked: Timer started");
                 m_startTime = System.nanoTime();
                 m_isBlocked = true;
             }

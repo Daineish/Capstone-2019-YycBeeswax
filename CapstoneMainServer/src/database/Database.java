@@ -58,7 +58,7 @@ public class Database {
 	
 	/**
      * Gets the BlockageThreshhold for a given hiveID, needed PCB side to know when to send alerts on blockage
-     * @param hiveID - the hiveID of the PCB starting up
+     * @param HiveID - the hiveID of the PCB starting up
      * @return the BlockTime from the database, return -1 on error
      */
 	public float getBlockTime(int HiveID){
@@ -158,7 +158,7 @@ public class Database {
 	
 	/**
      * performs a threshold check on temp and humidity against the database sensor bounds
-     * @param hiveID - the hiveID where the data is coming from.
+     * @param hiveId - the hiveID where the data is coming from.
      * @param temp  - the temperature to check.
      * @param humid - the humidity to check
      * @return returns passed if no bounds were exceded, otherwise, returns T, H, or TH corresponding to the exceeded bounds
