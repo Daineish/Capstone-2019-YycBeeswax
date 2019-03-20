@@ -223,7 +223,7 @@ public class Database {
      * @param hiveId - the hiveID where the data is coming from.
      * @param temp  - the temperature to check.
      * @param humid - the humidity to check
-     * @return returns passed if no bounds were exceded, otherwise, returns T, H, or TH corresponding to the exceeded bounds
+     * @return returns passed if no bounds were exceeded, otherwise, returns T, H, or TH corresponding to the exceeded bounds
      */
 	public String thresholdCheck(int hiveId, float temp, float humid)throws SQLException{
 		int notificationCase = 0;//used to track what values failed the check
@@ -256,6 +256,18 @@ public class Database {
 		}
 	}
 	
+	
+
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////Mobile App functions////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+	/**
+     * prints sensor data from a ResultSet to the console in a readable format
+     * @param rs - the ResultSet to be printed
+     */
 	public void printSensorData(ResultSet rs){
 		try{
 			while(rs.next()){
@@ -267,13 +279,11 @@ public class Database {
 			//return false if error occurred
 		}
 	}
-
 	
-	
-	
-	/////////////////////////////////////////////////////////////////////////////////
-	/////////////////////////////Mobile App functions////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////////
+	/**
+     * retrieves the list of all hives from database
+     * @return returns a ResultSet containing all hiveinfo for every hive in database
+     */
 	public ResultSet getHiveList()
 	{
 		ResultSet rs;
@@ -290,6 +300,19 @@ public class Database {
 		return rs;
 	}
 
+	/**
+     * updates a hive row in database corresponding to the hiveId in database equal to "origId"
+     * @param hiveId - the new hiveId
+     * @param loc  - the new location of the hive
+     * @param owner - the new owner of the hive
+     * @param tempLB - the new temperature lower bound for the hive
+     * @param tempUB - the new temperature upper bound for the hive  
+     * @param humidLB - the new humidity lower bound for the hive
+     * @param humidUB - the new humidity upper bound for the hive   
+     * @param blockTime - the new blockage time threshold
+     * @param origId - the original hiveId of the hive prior to requesting update, used to find the correct hive for purpose of the update 
+     * @return returns true if update was successful, false otherwise
+     */
 	public boolean updateHive(int hiveId, String loc, String owner, float tempLB,
 						   float tempUB, float humidLB, float humidUB, float blockTime, int origId)
 	{
@@ -363,6 +386,40 @@ public class Database {
 		}
 	}
 	
+	public boolean setNotificationType(int hiveId, String stakeholderName, boolean watchTemp, boolean watchHumid, boolean watchBlock){
+		//construct the notification type based on watch stakeholder wants to watch
+		String notifyType = "";
+		if(watchTemp){
+			notifyType += "T";
+		}
+		if(watchHumid){
+			notifyType += "H";
+		}
+		if(watchBlock){
+			notifyType += "B";
+		}
+		if(notifyType.equals("")){ //if no types are watched, set type to NONE
+			notifyType = "NONE";
+		}
+		
+		try
+		{
+			String query = "UPDATE watching SET NotificationType = ? WHERE HiveId = ? AND Name = ?";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			prepared.setString(1, notifyType);
+			prepared.setInt(2, hiveId);
+			prepared.setString(3, stakeholderName);
+			prepared.executeUpdate();
+			return true;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			//return false if error occurred
+			return false;
+		}
+	}
+	
 	
 	
 	
@@ -370,9 +427,9 @@ public class Database {
 	
 	public static void main(String[] args){
 		Database db = new Database();
-		ResultSet rs = db.getSensorData("65", "2019-01-01", "2019-03-03", "HUMIDITY");
-		db.printSensorData(rs);
-		//System.out.println(rs.toString());
+		//ResultSet rs = db.getSensorData("65", "2019-01-01", "2019-03-03", "HUMIDITY");
+		//db.printSensorData(rs);
+		db.setNotificationType(20, "Travis Manchee", true, true, true);
 	}
 	
 }
