@@ -186,7 +186,38 @@ public class Database {
 		}
 	}
 	
-	
+	/**
+     * stores the blockage data in the database
+     * @param hiveID - the hiveID where the data is coming from.
+     * @param blockTime - time entrance was blocked, to be stored in database
+     * @return true if successfully stored, else false.
+     */
+	public boolean storeBlockage(int hiveId, float blockTime){
+		try
+		{
+			
+			//prepared statement for security AND for ease of reading
+			String query = "INSERT INTO sensordata (HiveId, Time, SensorType, SensorData) VALUES (?, NOW(), ?, ?)";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			
+			//INSERT blockage data
+			prepared.setInt(1, hiveId);
+			prepared.setString(2, "BLOCKAGE");
+			prepared.setFloat(3, blockTime);
+			prepared.execute();
+			System.out.println("Entrance blockage data of " + blockTime + " seconds successfully added to database");
+			
+			//return true if blockage added to database correctly
+			return true;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			//return false if error occurred
+			return false;
+		}
+	}
+
 	/**
      * performs a threshold check on temp and humidity against the database sensor bounds
      * @param hiveId - the hiveID where the data is coming from.
@@ -228,9 +259,6 @@ public class Database {
 	public static void main(String[] args){
 		Database db = new Database();
 		db.storeSensorData(65, 25, 25);
-		
-		
-		
 	}
 	
 }
