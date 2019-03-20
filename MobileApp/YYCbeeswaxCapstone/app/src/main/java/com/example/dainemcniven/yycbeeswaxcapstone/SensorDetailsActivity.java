@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -57,6 +58,49 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
     private boolean m_isStartTime = false;
     private boolean m_isStartDate = false;
 
+    TcpClient m_tcpClient;
+    public class ConnectTask extends AsyncTask<String, String, TcpClient>
+    {
+        @Override
+        protected TcpClient doInBackground(String... message)
+        {
+
+            //we create a TCPClient object
+            m_tcpClient = new TcpClient(new TcpClient.OnMessageReceived()
+            {
+                @Override
+                //here the messageReceived method is implemented
+                public void messageReceived(String message)
+                {
+                    //this method calls the onProgressUpdate
+                    publishProgress(message);
+                }
+            });
+            m_tcpClient.run();
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values)
+        {
+            super.onProgressUpdate(values);
+
+            String[] hives = values[0].split(" ");
+            if("SENSOR_DATA".equals(hives[0]))
+            {
+                // If response is sensor data
+                ShowSensorData(values[0]);
+
+            }
+            else
+            {
+                // If response is hive list
+                ParseHives(values[0]);
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -69,15 +113,6 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
         m_endTime = (TextView)findViewById(R.id.endTimeText);
         m_hiveSpinner = (Spinner)findViewById(R.id.hiveSpinner);
         m_sensorSpinner = (Spinner)findViewById(R.id.sensorsSpinner);
-        InitializeViews();
-
-        // TODO: default is 24hrs up until now?
-
-        //GetAvailableSensors(start, end);
-
-        // access the database and see what sensor data is available,
-        // have some sort of list or something? then when you click on one you
-        // can see a list of the data or something?
     }
 
     View.OnClickListener myhandler1 = new View.OnClickListener()
@@ -87,6 +122,40 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
 
         }
     };
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
+        new ConnectTask().execute("");
+
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e) { }
+
+        InitializeViews();
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
+    }
 
     private void InitializeViews()
     {
@@ -109,7 +178,7 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
         List<String> spinnerArray =  new ArrayList<>();
         spinnerArray.add("Temperature");
         spinnerArray.add("Humidity");
-        spinnerArray.add("Both");
+        spinnerArray.add("All");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, spinnerArray);
 
@@ -117,11 +186,12 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
         m_sensorSpinner.setAdapter(adapter);
 
         // Add available hives
+        if(m_tcpClient!=null)
+        {
+            m_tcpClient.sendMessage("ANDROID_REQUEST HIVE_LIST");
+            //m_tcpClient.stopClient();
+        }
         //List<Integer> hiveArray = Utils.Utilities.GetAllHiveIds();
-        List<Integer> hiveArray = new ArrayList<>(); hiveArray.add(1);
-        ArrayAdapter<Integer> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hiveArray);
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        m_hiveSpinner.setAdapter(adapter1);
     }
 
     private void GetAvailableSensors(java.sql.Date start, java.sql.Date end)
@@ -186,24 +256,46 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
 
     public void showButtonClicked(View v)
     {
-        int hiveId = Integer.valueOf(m_hiveSpinner.getSelectedItem().toString());
+        m_tcpClient.stopClient();
+        new ConnectTask().execute("");
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e) { }
+
+        String hiveId = m_hiveSpinner.getSelectedItem().toString();
+        if("All".equals(hiveId))
+            hiveId = "-1";
+
         String sensor = m_sensorSpinner.getSelectedItem().toString();
+        if("All".equals(sensor))
+            sensor = "IS NOT NULL";
 
         String dtStart = m_startDate.getText().toString() + " " + m_startTime.getText().toString();
         String dtEnd = m_endDate.getText().toString() + " " + m_endTime.getText().toString();
         SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy HH:mm");
 
+        java.util.Date dateS;
+        java.util.Date dateE;
         try
         {
-            java.util.Date dateS = format.parse(dtStart);
-            java.util.Date dateE = format.parse(dtEnd);
+            dateS = format.parse(dtStart);
+            dateE = format.parse(dtEnd);
             Log.e("", dateS.toString());
             Log.e("", dateE.toString());
         } catch (ParseException e) {
             e.printStackTrace();
+            return;
         }
+        String str = "ANDROID_REQUEST SENSOR_DETAILS ";
+        str += hiveId + "_";
+        str += sensor + "_";
+        str += dateS.getTime() + "_";
+        str += dateE.getTime();
 
-        //ResultSet results = Database.getInstance().GetSensorsData(hiveId,dateS,dateE,sensor);
+        if(m_tcpClient!=null)
+            m_tcpClient.sendMessage(str);
     }
 
     public void showTimePickerDialog(View v)
@@ -268,5 +360,33 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
             else
                 m_endDate.setText(dateF.format(d));
         }
+    }
+
+    public void ParseHives(String val)
+    {
+        String[] hives = val.split(" ");
+        List<String> hiveArray = new ArrayList<>();
+        for(int i = 0; i < hives.length; i++)
+        {
+            hiveArray.add(hives[i]);
+        }
+        hiveArray.add("All");
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, hiveArray);
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        m_hiveSpinner.setAdapter(adapter1);
+    }
+
+    public void ShowSensorData(String val)
+    {
+        // parse data and display it in some way
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
+        finish();
     }
 }
