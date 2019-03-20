@@ -181,15 +181,16 @@ public class Database {
 	}
 	
 	/**
-     * stores the blockage data in the database
+     * stores the blockage data in the database and alerts watching stakeholders
      * @param hiveID - the hiveID where the data is coming from.
      * @param blockTime - time entrance was blocked, to be stored in database
      * @return true if successfully stored, else false.
      */
 	public boolean storeBlockage(int hiveId, float blockTime){
 		try
-		{
-			
+		{	
+			ResultSet list = getStakeholderEmail(hiveId);
+			handler.notifyStakeholders(list, hiveId, "B", 0, 0, blockTime);
 			//prepared statement for security AND for ease of reading
 			String query = "INSERT INTO sensordata (HiveId, Time, SensorType, SensorData) VALUES (?, NOW(), ?, ?)";
 			PreparedStatement prepared = connection.prepareStatement(query);
@@ -493,7 +494,25 @@ public class Database {
 	
 	
 	public static void main(String[] args){
-		//Database db = new Database();
+		Database db = new Database();
+		db.storeBlockage(20, 65666);
+		
+		/*//for populating database with fake sensor data for testing
+		int hiveId;
+		for(int i=0; i<30; i++){
+			if(i%2 == 1){
+				hiveId = 65;
+			}
+			else{
+				hiveId = 20;
+			}
+			System.out.println("generating fake data for hive " + hiveId + "\n");
+			db.storeBlockage(hiveId, (float)(1000000*Math.random()));
+			db.storeSensorData(hiveId, (float)(10+(15*Math.random())) , (float)(20+(30*Math.random())));
+		}
+		
+		 */
+		
 		//ResultSet rs = db.getSensorData("65", "2019-01-01", "2019-03-03", "HUMIDITY");
 		//db.printSensorData(rs);
 		//db.setNotificationType(20, "Travis Manchee", true, true, true);
