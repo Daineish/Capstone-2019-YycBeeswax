@@ -1,12 +1,8 @@
 package database;
 
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -19,13 +15,11 @@ public class Database {
 
 	private Connection connection;
 	private NotificationHandler handler;
-	private String propertiesFileName = "config.properties";//**************
-	//TODO move these values into a external config file that is read on database initialization
-	private String database;// = "jdbc:mysql://localhost:3306/capstone_db";
-	private String username; // = "root";
-	private String password; // = "capstone";
-	private String fromEmail; // = "hivenotificationalert@gmail.com";
-	private String fromPass; // = "Capstone2019";
+	private String database;
+	private String username;
+	private String password;
+	private String fromEmail;
+	private String fromPass;
 	
 	
 	public Database()
@@ -115,7 +109,7 @@ public class Database {
 	}
 	
 	/**
-     * Gets the list of stakeholders and their notificationTypes from the database who are watching the hive with HiveID.
+     * Gets the list of stakeholder emails and their notificationTypes from the database who are watching the hive with HiveID.
      * @param HiveID - the hiveID where the data is coming from.
      * @return the list of stakeholders emails and notificationTypes in a ResultSet, or return a null if an error is detected
      */
@@ -265,7 +259,7 @@ public class Database {
 	/////////////////////////////Mobile App functions////////////////////////////////
 	/////////////////////////////////////////////////////////////////////////////////
 	/**
-     * prints sensor data from a ResultSet to the console in a readable format
+     * prints sensor data from a ResultSet to the console in a readable format, used for testing
      * @param rs - the ResultSet to be printed
      */
 	public void printSensorData(ResultSet rs){
@@ -298,6 +292,52 @@ public class Database {
 		{return null;}//return null if failed to retrieve hiveinfo
 
 		return rs;
+	}
+	
+	/**
+     * retrieves the list of all stakeholders from database
+     * @return returns a ResultSet containing all stakeholders and associated data
+     */
+	public ResultSet getStakeholderList(){
+		try
+		{
+			ResultSet rs;
+			//build query to be executed
+			String query = "SELECT * FROM stakeholder";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			//execute query and put result into result set rs
+			rs = prepared.executeQuery();
+			return rs;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+     * retrieves the list of all watching entries from database where the given stakeholderName corresponds to the rows Name column
+     * @param stakeholderName - the name of the stakeholder to retrieve all associated watching rows for
+     * @return returns a ResultSet containing all watching rows and associated data where stakeholderName = Name
+     */
+	public ResultSet getWatchingList(String stakeholderName){
+		try
+		{
+			ResultSet rs;
+			//build query to be executed
+			String query = "SELECT * FROM watching WHERE Name = ?";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			prepared.setString(1, stakeholderName);
+			//execute query and put result into result set rs
+			rs = prepared.executeQuery();
+			return rs;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
@@ -340,6 +380,13 @@ public class Database {
 		}
 	}
 	
+	/**
+     * updates a stakeholder row in database corresponding to the stakeholderId in database equal to "stakeholderId"
+     * @param stakeholderId - the stakeholderId used to identify the stakeholder
+     * @param name  - the updated stakeholder name
+     * @param email - the updated stakeholder email
+     * @return returns true if update was successful, false otherwise
+     */
 	public boolean updateStakeholder(int stakeholderId, String name, String email){
 		try
 		{
@@ -359,6 +406,16 @@ public class Database {
 		}
 	}
 	
+	
+	/**
+     * retrieves a subset of the sensordata table based on given query restrictions
+     * @param stakeholderId - the stakeholderId used to identify the stakeholder
+     * @param hiveId - the hiveId of the hive to get relevant sensor data from, setting it to null retrieves data from all hives
+     * @param fromTime - the earliest time bound of data to be retrieved
+     * @param toTime - the latest time bound of data to be retrieved
+     * @param sensorType - the sensorType of the data to retrieve, setting it to null retrieves all sensor types (TEMP, HUMIDITY, BLOCK)
+     * @return returns a ResultSet of all data satisfying the query, or null if error occurs
+     */
 	public ResultSet getSensorData(String HiveId, String fromTime, String toTime, String sensorType){
 		try
 		{
@@ -386,6 +443,16 @@ public class Database {
 		}
 	}
 	
+	
+	/**
+     * updates a row of watching table with a new value for notificationType
+     * * @param hiveId - the hiveId used to indentify a row of watching
+     * @param stakeholderName - the stakeholderName used to identify a row of watching
+     * @param watchTemp - a boolean whose value reflects whether or not the stakeholder wants to be notified of temperature anomalies 
+     * @param watchHumid -  a boolean whose value reflects whether or not the stakeholder wants to be notified of humidity anomalies
+     * @param watchBlock - a boolean whose value reflects whether or not the stakeholder wants to be notified of a blockage beyond threshold
+     * @return returns true if update was successful, false otherwise
+     */
 	public boolean setNotificationType(int hiveId, String stakeholderName, boolean watchTemp, boolean watchHumid, boolean watchBlock){
 		//construct the notification type based on watch stakeholder wants to watch
 		String notifyType = "";
@@ -426,10 +493,10 @@ public class Database {
 	
 	
 	public static void main(String[] args){
-		Database db = new Database();
+		//Database db = new Database();
 		//ResultSet rs = db.getSensorData("65", "2019-01-01", "2019-03-03", "HUMIDITY");
 		//db.printSensorData(rs);
-		db.setNotificationType(20, "Travis Manchee", true, true, true);
+		//db.setNotificationType(20, "Travis Manchee", true, true, true);
 	}
 	
 }
