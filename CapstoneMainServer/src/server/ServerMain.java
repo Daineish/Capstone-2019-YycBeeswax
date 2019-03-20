@@ -4,8 +4,12 @@ import database.Database;
 import javax.xml.crypto.Data;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 /**
  * This class creates a server which acts at the communication point between
@@ -23,19 +27,20 @@ public class ServerMain extends ServerSocket
 	private boolean m_isBlocked = false;
 	private long m_elapsedTime = 0;
 	private long m_startTime = 0;
+	private Socket m_socket = null;
 
     public ServerMain(int port) throws java.io.IOException
     {
         super(port);
         
         // Open Database Connection
-        //db = new Database();
+        db = new Database();
     }
 
     public String ReadMessageFromDevice() throws java.io.IOException
     {
-        Socket connectionSocket = accept();
-        BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+        m_socket = accept();
+        BufferedReader inFromClient = new BufferedReader(new InputStreamReader(m_socket.getInputStream()));
         return inFromClient.readLine();
     }
 
@@ -149,5 +154,33 @@ public class ServerMain extends ServerSocket
         //sent = false;
 
         return sent;
+    }
+
+    public ResultSet SendMessageToDatabase(String msg)
+    {
+        return db.SendArbitraryQuery(msg);
+    }
+
+    public void SendMessageToClient(String msg)
+    {
+        try
+        {
+            PrintWriter out = new PrintWriter(m_socket.getOutputStream(), true);
+            out.println(msg);
+            out.flush();
+            out.close();
+        }
+        catch(java.io.IOException e) { System.out.println("Error..."); }
+    }
+
+    public ResultSet GetHiveList()
+    {
+        return db.GetHiveList();
+    }
+
+    public void UpdateHive(int hiveId, String loc, String owner, float tempLB,
+                           float tempUB, float humidLB, float humidUB, float blockTime, int origId)
+    {
+        db.UpdateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
     }
 }

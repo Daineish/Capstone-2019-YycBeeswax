@@ -35,4 +35,9 @@ public final class Utilities
         catch(SQLException e){}
         return rv;
     }
+
+    public static void SQLRequestFromServer(String request)
+    {
+
+    }
 }

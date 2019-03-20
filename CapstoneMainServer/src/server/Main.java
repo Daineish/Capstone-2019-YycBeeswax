@@ -2,6 +2,9 @@ package server;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.InetAddress;
+import java.sql.ResultSet;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * The Main class which handles the Server and it's communications.
@@ -11,50 +14,61 @@ public class Main
 
     public static void main(String argv[]) throws Exception
     {
-        String current = new java.io.File( "." ).getCanonicalPath();
-        System.out.println(current);
-
-        BufferedReader reader = new BufferedReader(new FileReader("./config.properties"));
-        String line;
-        while ((line = reader.readLine()) != null)
-        {
-            System.out.println(line);
-        }
-        reader.close();
-
         // Open ServerSocket
         ServerMain server = new ServerMain(4444);
+        ServerMain server2 = new ServerMain(4445);
         System.out.println(InetAddress.getLocalHost());
 
-        while (true)
-        {
-            // Accept the client, receive a string message.
-            String clientSentence = server.ReadMessageFromDevice();
-            Utilities.PrintMessage("\nReceived: " + clientSentence);
-            ParseData(server, clientSentence);
+        Runnable r = new DeviceServer(server);
+        Thread t = new Thread(r);
+        Runnable r2 = new AndroidServer(server2);
+        Thread t2 = new Thread(r2);
+        t.start();
+        t2.start();
+    }
+}
 
-        } // endWhile()
+class DeviceServer implements Runnable
+{
+    ServerMain m_server;
+    public DeviceServer(ServerMain server)
+    {
+        m_server = server;
     }
 
-    private static void ParseData(ServerMain server, String clientSentence)
+    public void run()
+    {
+        while(true)
+        {
+            try
+            {
+                String clientSentence = m_server.ReadMessageFromDevice();
+                Utilities.PrintMessage("\nReceived: " + clientSentence);
+                ParseData(clientSentence);
+            }
+            catch(java.io.IOException e) { }
+        }
+    }
+
+    private void ParseData(String clientSentence)
     {
         try
         {
             // Parse client response
             String[] clientVals = clientSentence.split(" ");
+            List<String> clientStrings = Arrays.asList(clientVals);
 
-            // Should be at least 3 values, one for data type, one for hiveID, one for data.
-            Utilities.AssertMessage(clientVals.length >= 4, true, "Numbers of values received from client < 4");
-            int hiveID = Integer.parseInt(clientVals[1]);
+
             if(Utilities.g_tempHumidIrSensor.equals(clientVals[0]))
             {
                 // Temperature/Humidity Sensor
                 Utilities.AssertMessage(clientVals.length == 5, true, "Incorrect number of values received from sensors");
+                int hiveID = Integer.parseInt(clientVals[1]);
                 float temp = Float.parseFloat(clientVals[2]);
                 float humid = Float.parseFloat(clientVals[3]);
                 boolean blocked = Boolean.parseBoolean(clientVals[4]);
-                server.SendTempHumidToDatabase(hiveID, temp, humid);
-                server.IsBlocked(hiveID, blocked);
+                m_server.SendTempHumidToDatabase(hiveID, temp, humid);
+                m_server.IsBlocked(hiveID, blocked);
             }
             else
             {
@@ -66,5 +80,117 @@ public class Main
             // Catch errors and try again
         }
     }
+}
 
+class AndroidServer implements Runnable
+{
+    ServerMain m_server;
+
+    public AndroidServer(ServerMain server)
+    {
+        m_server = server;
+    }
+
+    public void run()
+    {
+        while(true)
+        {
+            try
+            {
+                String clientSentence = m_server.ReadMessageFromDevice();
+                Utilities.PrintMessage("\nReceived!: " + clientSentence);
+                ParseData(clientSentence);
+            }
+            catch(java.io.IOException e) { }
+        }
+
+    }
+
+    private void ParseData(String clientSentence)
+    {
+        try
+        {
+            // Parse client response
+            String[] clientVals = clientSentence.split(" ");
+
+            if(Utilities.g_androidRequest.equals(clientVals[0]))
+            {
+                Utilities.AssertMessage(clientVals.length >= 2, true, "Numbers of values received from client < 2");
+                String str = "";
+
+                if("HIVE_LIST".equals(clientVals[1]))
+                {
+                    ResultSet rs = m_server.GetHiveList();
+                    while(rs.next())
+                    {
+                        int hiveID = rs.getInt("HiveId");
+                        str += hiveID + " ";
+                    }
+                }
+                else if("HIVE_INFO".equals(clientVals[1]))
+                {
+                    ResultSet rs = m_server.GetHiveList();
+
+                    while(rs.next())
+                    {
+                        int hiveVal = rs.getInt("HiveID");
+                        if(hiveVal == Integer.parseInt(clientVals[2]))
+                        {
+                            str += hiveVal + "_";
+                            str += rs.getString("Location") + "_";
+                            str += rs.getString("Owner") + "_";
+                            str += String.valueOf(rs.getFloat("TempLB")) + "_";
+                            str += String.valueOf(rs.getFloat("TempUB")) + "_";
+                            str += String.valueOf(rs.getFloat("HumidLB")) + "_";
+                            str += String.valueOf(rs.getFloat("HumidUB")) + "_";
+                            float blockSec = (rs.getFloat("BlockTime"));
+                            str += String.valueOf(blockSec/60.0);// TODO: minutes (I hope)
+                            break;
+                        }
+                    }
+                }
+                else if("HIVE_UPDATE".equals(clientVals[1]))
+                {
+                    String dataStr = "";
+                    for(int i = 2; i < clientVals.length; i++)
+                        dataStr += clientVals[i];
+                    String[] data = dataStr.split("_");
+
+                    if(data.length != 9)
+                    {
+                        System.err.println("Length should be 8, received: " + data.length);
+                        return;
+                    }
+                    int hiveId = Integer.parseInt(data[0]);
+                    String loc = data[1];
+                    String owner = data[2];
+                    float tempLB = Float.parseFloat(data[3]);
+                    float tempUB = Float.parseFloat(data[4]);
+                    float humidLB = Float.parseFloat(data[5]);
+                    float humidUB = Float.parseFloat(data[6]);
+                    float blockTime = Float.parseFloat(data[7]);
+                    int origId = Integer.parseInt(data[8]);
+
+                    m_server.UpdateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
+                }
+                else
+                {
+                    Utilities.AssertMessage(false, true, "Unknown SQL cmd received: " + clientVals[1]);
+                }
+
+                System.out.println("Sending: " + str);
+                m_server.SendMessageToClient(str);
+
+            }
+            else
+            {
+                Utilities.AssertMessage(false, true, "Unknown data type received: " + clientVals[0]);
+            }
+        }
+        catch(Exception e)
+        {
+            // Catch errors and try again
+            System.err.println("Error: " + e.getMessage());
+        }
+    }
 }

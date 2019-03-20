@@ -2,6 +2,7 @@ package com.example.dainemcniven.yycbeeswaxcapstone;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,47 @@ import android.widget.TextView;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 
 public class HiveListActivity extends AppCompatActivity
 {
     private String m_selectedHive = null;
+    TcpClient m_tcpClient;
+
+    public class ConnectTask extends AsyncTask<String, String, TcpClient>
+    {
+        @Override
+        protected TcpClient doInBackground(String... message)
+        {
+
+            //we create a TCPClient object
+            m_tcpClient = new TcpClient(new TcpClient.OnMessageReceived()
+            {
+                @Override
+                //here the messageReceived method is implemented
+                public void messageReceived(String message)
+                {
+                    //this method calls the onProgressUpdate
+                    publishProgress(message);
+                }
+            });
+            m_tcpClient.run();
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values)
+        {
+            super.onProgressUpdate(values);
+            //response received from server
+            Log.e("test", "response " + values[0]);
+            GetAvailableHives(values[0]);
+            //process server response here....
+
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -28,7 +65,20 @@ public class HiveListActivity extends AppCompatActivity
         setContentView(R.layout.activity_hivelist);
 
         // TODO: Access the database or whatever and list what hives are available
-        GetAvailableHives();
+        new ConnectTask().execute("");
+
+        try
+        {
+            Thread.sleep(2000);
+        }
+        catch (InterruptedException e) { }
+
+
+        // Send Request for Available Hives
+        if(m_tcpClient!=null)
+            m_tcpClient.sendMessage("ANDROID_REQUEST HIVE_LIST");
+        else
+            Log.e("Damn", "tcp is null");
 
     }
 
@@ -36,8 +86,9 @@ public class HiveListActivity extends AppCompatActivity
     {
         public void onClick(View v)
         {
-            EditText sender = (EditText)v;
-            String hivenum = sender.getTag().toString();
+            m_tcpClient.stopClient();
+            TextView sender = (TextView)v;
+            int hivenum = Integer.parseInt(sender.getTag().toString());
 
             Log.e("a", "Hive: " + hivenum);
             Intent myIntent = new Intent(HiveListActivity.this, HiveInfoActivity.class);
@@ -47,10 +98,8 @@ public class HiveListActivity extends AppCompatActivity
     };
 
 
-    private void GetAvailableHives()
+    private void GetAvailableHives(String response)
     {
-        ResultSet hives = Database.getInstance().GetHives();
-
         LinearLayout mainLayout = new LinearLayout(this);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
         ScrollView scrollView = new ScrollView(this);
@@ -60,27 +109,31 @@ public class HiveListActivity extends AppCompatActivity
         scrollView.addView(linearLayout);
         this.addContentView(mainLayout, layoutParams);
 
-        try
-        {
-            while(hives.next())
-            {
-                int hiveID = hives.getInt("HiveId");
-                TextView hive = new TextView(this);
-                hive.setText("Hive: " + hiveID);
-                hive.setOnClickListener(myhandler1);
-                hive.setTag(hiveID);
-                linearLayout.addView(hive);
+        String[] hives = response.split(" ");
 
-                View v = new View(this);
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                params.gravity = Gravity.CENTER;
-                params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                params.height = 2;
-                v.setBackgroundColor(Color.BLACK);
-                v.setLayoutParams(params);
-            }
+        for(int i = 0; i < hives.length; i++)
+        {
+            TextView hive = new TextView(this);
+            hive.setText("Hive: " + hives[i]);
+            hive.setOnClickListener(myhandler1);
+            hive.setTag(hives[i]);
+            linearLayout.addView(hive);
+
+            View v = new View(this);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            params.gravity = Gravity.CENTER;
+            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params.height = 2;
+            v.setBackgroundColor(Color.BLACK);
+            v.setLayoutParams(params);
         }
-        catch(Exception e)
-        {}
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        m_tcpClient.stopClient();
+        finish();
     }
 }
