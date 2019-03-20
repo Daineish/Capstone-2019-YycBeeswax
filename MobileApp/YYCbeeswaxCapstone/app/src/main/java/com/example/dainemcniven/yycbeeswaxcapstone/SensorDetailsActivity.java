@@ -86,8 +86,8 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
         {
             super.onProgressUpdate(values);
 
-            String[] hives = values[0].split(" ");
-            if("SENSOR_DATA".equals(hives[0]))
+            String[] hives = values[0].split("_");
+            if("SENSORDATA".equals(hives[0]))
             {
                 // If response is sensor data
                 ShowSensorData(values[0]);
@@ -269,8 +269,6 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
             hiveId = "-1";
 
         String sensor = m_sensorSpinner.getSelectedItem().toString();
-        if("All".equals(sensor))
-            sensor = "IS NOT NULL";
 
         String dtStart = m_startDate.getText().toString() + " " + m_startTime.getText().toString();
         String dtEnd = m_endDate.getText().toString() + " " + m_endTime.getText().toString();
@@ -379,6 +377,41 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
     public void ShowSensorData(String val)
     {
         // parse data and display it in some way
+        LinearLayout mainLayout = new LinearLayout(this);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        ScrollView scrollView = new ScrollView(this);
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        mainLayout.addView(scrollView);
+        scrollView.addView(linearLayout);
+        this.addContentView(mainLayout, layoutParams);
+
+        String[] datapieces = val.split("_");
+
+        for(int i = 1; i < datapieces.length; i++)
+        {
+            String[] vals = datapieces[i].split(" ");
+            TextView hive = new TextView(this);
+            hive.setText("Hive: " + vals[0]);
+            hive.setTextSize(24);
+            hive.setTextColor(Color.BLACK);
+            linearLayout.addView(hive);
+
+            TextView time = new TextView(this);
+            time.setText(vals[1]);
+            time.setTextSize(24);
+            time.setTextColor(Color.BLACK);
+            linearLayout.addView(time);
+
+//            View v = new View(this);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//            params.gravity = Gravity.CENTER;
+//            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+//            params.height = 2;
+//            v.setBackgroundColor(Color.BLACK);
+//            v.setLayoutParams(params);
+//            linearLayout.addView(v);
+        }
     }
 
     @Override

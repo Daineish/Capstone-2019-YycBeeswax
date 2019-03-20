@@ -3,7 +3,10 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.net.InetAddress;
 import java.sql.ResultSet;
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -173,14 +176,58 @@ class AndroidServer implements Runnable
 
                     m_server.UpdateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
                 }
+                else if("SENSOR_DETAILS".equals(clientVals[1]))
+                {
+                    String dataStr = "";
+                    for(int i = 2; i < clientVals.length; i++)
+                        dataStr += clientVals[i];
+                    String[] data = dataStr.split("_");
+
+                    if(data.length != 4)
+                    {
+                        System.err.println("Length should be 4, received: " + data.length);
+                        return;
+                    }
+                    String hiveId = data[0];
+                    if("-1".equals(hiveId))
+                        hiveId = null;
+                    String sensor = data[1];
+                    if("All".equals(sensor))
+                        sensor = null;
+                    else if("Temperature".equals(sensor))
+                        sensor = "TEMP";
+                    else if("Humidity".equals(sensor))
+                        sensor = "HUMIDITY";
+
+                    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                    String start = format.format(new Date(Long.parseLong(data[2])));
+                    String end = format.format(new Date(Long.parseLong(data[3])));
+
+                    ResultSet rs = m_server.GetSensorData(hiveId, start, end, sensor);
+                    str += "SENSORDATA_";
+                    while(rs.next())
+                    {
+                        int hiveVal = rs.getInt("HiveID");
+                        Time time = rs.getTime("Time");
+                        String type = rs.getString("SensorType");
+                        float sensorData = rs.getFloat("SensorData");
+
+                        str += hiveVal + " ";
+                        str += time + " ";
+                        str += type + " ";
+                        str += sensorData + "_";
+                    }
+                }
                 else
                 {
                     Utilities.AssertMessage(false, true, "Unknown SQL cmd received: " + clientVals[1]);
                 }
 
-                System.out.println("Sending: " + str);
-                m_server.SendMessageToClient(str);
-
+                if(str != "")
+                {
+                    System.out.println("Sending: " + str);
+                    m_server.SendMessageToClient(str);
+                }
             }
             else
             {
