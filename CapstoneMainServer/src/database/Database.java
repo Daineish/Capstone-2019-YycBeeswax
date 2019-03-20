@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -122,7 +123,6 @@ public class Database {
 		try
 		{
 			ResultSet rs;
-			//ArrayList<String> emailList = new ArrayList<String>();
 			
 			//build query to be executed
 			//get email and notification type for stakeholders watching the hive who's notificationType isn't set to NONE
@@ -255,21 +255,26 @@ public class Database {
 				return "passed";
 		}
 	}
-
-	public ResultSet SendArbitraryQuery(String str)
-	{
-		ResultSet rs = null;
-		try
+	
+	public void printSensorData(ResultSet rs){
+		try{
+			while(rs.next()){
+				System.out.println("HiveId: " + rs.getString("HiveId") + "	Time: " + rs.getString("Time") + "	Type: " + rs.getString("SensorType") + "	Data: " + rs.getString("SensorData") + "\n");
+			}
+		}catch (SQLException e) 
 		{
-			PreparedStatement prepared = connection.prepareStatement(str);
-			rs = prepared.executeQuery();
+			e.printStackTrace();
+			//return false if error occurred
 		}
-		catch(java.sql.SQLException e) { }
-
-		return rs;
 	}
 
-	public ResultSet GetHiveList()
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////
+	/////////////////////////////Mobile App functions////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////////////
+	public ResultSet getHiveList()
 	{
 		ResultSet rs;
 		try
@@ -285,10 +290,9 @@ public class Database {
 		return rs;
 	}
 
-	public void UpdateHive(int hiveId, String loc, String owner, float tempLB,
+	public boolean updateHive(int hiveId, String loc, String owner, float tempLB,
 						   float tempUB, float humidLB, float humidUB, float blockTime, int origId)
 	{
-		// TODO: fix
 		try
 		{
 			String query = "UPDATE hiveinfo SET HiveId = ?, Location = ?, Owner = ?, TempLB = ?, TempUB = ?, HumidLB = ?," +
@@ -304,13 +308,71 @@ public class Database {
 			prepared.setFloat(8, blockTime);
 			prepared.setInt(9, origId);
 			prepared.executeUpdate();
+			return true;
 		}
-		catch(SQLException e) { System.err.println("Error: " + e.getMessage()); }
+		catch(SQLException e)
+		{
+			System.err.println("Error: " + e.getMessage()); 
+			return false;
+		}
 	}
+	
+	public boolean updateStakeholder(int stakeholderId, String name, String email){
+		try
+		{
+			String query = "UPDATE stakeholder SET Name = ?, Email = ? WHERE StakeholderId = ?";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			prepared.setString(1, name);
+			prepared.setString(2, email);
+			prepared.setInt(3, stakeholderId);
+			prepared.executeUpdate();
+			return true;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			//return false if error occurred
+			return false;
+		}
+	}
+	
+	public ResultSet getSensorData(String HiveId, String fromTime, String toTime, String sensorType){
+		try
+		{
+			ResultSet rs;
+			
+			//build query to be executed
+			//get email and notification type for stakeholders watching the hive who's notificationType isn't set to NONE
+			//String query = "SELECT * FROM sensordata WHERE HiveId = ? AND Time BETWEEN ? AND ? AND SensorType = ?";
+			String query = "SELECT * FROM sensordata WHERE (HiveId = ? OR (HiveId IS NOT NULL AND ? IS NULL)) AND (SensorType = ? OR (SensorType IS NOT NULL AND ? IS NULL)) AND (Time BETWEEN ? AND ?)";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			prepared.setString(1, HiveId);
+			prepared.setString(2, HiveId);
+			prepared.setString(3, sensorType);
+			prepared.setString(4, sensorType);
+			prepared.setDate(5, Date.valueOf(fromTime));
+			prepared.setDate(6, Date.valueOf(toTime));
+			//execute query and put result into result set rs
+			rs = prepared.executeQuery();
+			return rs;
+		}
+		catch (SQLException e) 
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	
+	
+	
 	
 	public static void main(String[] args){
 		Database db = new Database();
-		db.storeSensorData(65, 25, 25);
+		ResultSet rs = db.getSensorData("65", "2019-01-01", "2019-03-03", "HUMIDITY");
+		db.printSensorData(rs);
+		//System.out.println(rs.toString());
 	}
 	
 }
