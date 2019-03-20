@@ -253,6 +253,14 @@
                 android:text="Show"
                 android:textColor="#000000" />
 
+            <TableLayout
+                android:id="@+id/dataLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_columnSpan="3"
+                android:stretchColumns="*"
+                android:visibility="invisible"/>
+
         </GridLayout>
     </ScrollView>
 

@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -23,6 +24,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -52,6 +55,7 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
     private TextView m_endTime;
     private Spinner m_hiveSpinner;
     private Spinner m_sensorSpinner;
+    private TableLayout m_dataLayout = null;
 
     private DatePickerFragment m_datePicker;
     private TimePickerFragment m_timePicker;
@@ -113,6 +117,7 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
         m_endTime = (TextView)findViewById(R.id.endTimeText);
         m_hiveSpinner = (Spinner)findViewById(R.id.hiveSpinner);
         m_sensorSpinner = (Spinner)findViewById(R.id.sensorsSpinner);
+        m_dataLayout = (TableLayout)findViewById(R.id.dataLayout);
     }
 
     View.OnClickListener myhandler1 = new View.OnClickListener()
@@ -376,32 +381,65 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
 
     public void ShowSensorData(String val)
     {
-        // parse data and display it in some way
-        LinearLayout mainLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
-        ScrollView scrollView = new ScrollView(this);
-        LinearLayout linearLayout = new LinearLayout(this);
-        linearLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.addView(scrollView);
-        scrollView.addView(linearLayout);
-        this.addContentView(mainLayout, layoutParams);
+//        // parse data and display it in some way
+//        LinearLayout mainLayout = new LinearLayout(this);
+//        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+//        ScrollView scrollView = new ScrollView(this);
+//        LinearLayout linearLayout = new LinearLayout(this);
+//        linearLayout.setOrientation(LinearLayout.VERTICAL);
+//        mainLayout.addView(scrollView);
+//        scrollView.addView(linearLayout);
+//        this.addContentView(mainLayout, layoutParams);
+
+        m_dataLayout.removeAllViews();
+        m_dataLayout.setVisibility(View.VISIBLE);
+
+        TableRow titles = new TableRow(this);
+        TextView title1 = new TextView(this);
+        TextView title2 = new TextView(this);
+        TextView title3 = new TextView(this);
+        TextView title4 = new TextView(this);
+        title1.setText("Hive ID"); title1.setTextColor(Color.BLACK); title1.setTextSize(24);
+        title2.setText("Time"); title2.setTextColor(Color.BLACK); title2.setTextSize(24);
+        title3.setText("Sensor"); title3.setTextColor(Color.BLACK); title3.setTextSize(24);
+        title4.setText("Value"); title4.setTextColor(Color.BLACK); title4.setTextSize(24);
+        titles.addView(title1); titles.addView(title2); titles.addView(title3); titles.addView(title4);
+        m_dataLayout.addView(titles);
+
 
         String[] datapieces = val.split("_");
 
         for(int i = 1; i < datapieces.length; i++)
         {
+            TableRow row = new TableRow(this);
+
+
             String[] vals = datapieces[i].split(" ");
             TextView hive = new TextView(this);
             hive.setText("Hive: " + vals[0]);
-            hive.setTextSize(24);
+            hive.setTextSize(18);
             hive.setTextColor(Color.BLACK);
-            linearLayout.addView(hive);
+            row.addView(hive);
 
             TextView time = new TextView(this);
             time.setText(vals[1]);
-            time.setTextSize(24);
+            time.setTextSize(18);
             time.setTextColor(Color.BLACK);
-            linearLayout.addView(time);
+            row.addView(time);
+
+            TextView sensor = new TextView(this);
+            sensor.setText(vals[2]);
+            sensor.setTextSize(18);
+            sensor.setTextColor(Color.BLACK);
+            row.addView(sensor);
+
+            TextView value = new TextView(this);
+            value.setText(vals[3]);
+            value.setTextSize(18);
+            value.setTextColor(Color.BLACK);
+            row.addView(value);
+
+            m_dataLayout.addView(row);
 
 //            View v = new View(this);
 //            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
