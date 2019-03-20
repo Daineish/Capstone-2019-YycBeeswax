@@ -16,13 +16,29 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/hiveTitle"
+                android:id="@+id/titleView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
+                android:paddingBottom="40dp"
+                android:text="Select Data"
+                android:textColor="@android:color/black"
+                android:textSize="32dp" />
+
+            <TextView
+                android:id="@+id/hiveTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_row="1"
+                android:layout_rowSpan="1"
+                android:layout_column="0"
+                android:layout_columnSpan="1"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
                 android:text="Hive:"
                 android:textColor="@android:color/black"
                 android:textSize="24dp" />
@@ -31,7 +47,7 @@
                 android:id="@+id/hiveSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="0"
+                android:layout_row="1"
                 android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
@@ -41,10 +57,13 @@
                 android:id="@+id/date1Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="1"
+                android:layout_row="2"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
                 android:text="Start Date:"
                 android:textColor="@android:color/black"
                 android:textSize="24dp"
@@ -54,10 +73,13 @@
                 android:id="@+id/time1Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="2"
+                android:layout_row="3"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
+                android:paddingStart="5dp"
+                android:paddingLeft="5dp"
+                android:paddingBottom="15dp"
                 android:text="Start Time:"
                 android:textColor="@android:color/black"
                 android:textSize="24dp" />
@@ -66,10 +88,11 @@
                 android:id="@+id/startTimeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="2"
+                android:layout_row="3"
                 android:layout_column="1"
-                android:layout_marginLeft="20dp"
                 android:inputType="none"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
@@ -77,10 +100,11 @@
                 android:id="@+id/endTimeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="4"
+                android:layout_row="5"
                 android:layout_column="1"
-                android:layout_marginLeft="20dp"
                 android:inputType="none"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
@@ -88,10 +112,11 @@
                 android:id="@+id/startDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="1"
+                android:layout_row="2"
                 android:layout_column="1"
-                android:layout_marginLeft="20dp"
                 android:inputType="none"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
@@ -99,54 +124,65 @@
                 android:id="@+id/startTimeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="2"
+                android:layout_row="3"
                 android:layout_column="2"
-                android:onClick="showTimePickerDialog"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Pick Time" />
+                android:onClick="showTimePickerDialog"
+                android:paddingLeft="5dp"
+                android:paddingBottom="15dp"
+                android:text="Pick Time"
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/startDateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="1"
+                android:layout_row="2"
                 android:layout_column="2"
-                android:onClick="showDatePickerDialog"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Pick Date" />
+                android:onClick="showDatePickerDialog"
+                android:paddingLeft="5dp"
+                android:paddingBottom="15dp"
+                android:text="Pick Date"
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/endDateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="3"
+                android:layout_row="4"
                 android:layout_column="2"
-                android:onClick="showDatePickerDialog"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Pick Date" />
+                android:onClick="showDatePickerDialog"
+                android:paddingLeft="5dp"
+                android:paddingBottom="15dp"
+                android:text="Pick Date"
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/endTimeButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="4"
+                android:layout_row="5"
                 android:layout_column="2"
-                android:onClick="showTimePickerDialog"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Pick Time" />
+                android:onClick="showTimePickerDialog"
+                android:paddingLeft="5dp"
+                android:paddingBottom="15dp"
+                android:text="Pick Time"
+                android:textColor="#000000" />
 
             <TextView
                 android:id="@+id/date2Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="3"
+                android:layout_row="4"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
                 android:text="End Date:"
                 android:textColor="@android:color/black"
                 android:textSize="24dp"
@@ -156,10 +192,11 @@
                 android:id="@+id/endDateText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="3"
+                android:layout_row="4"
                 android:layout_column="1"
-                android:layout_marginLeft="20dp"
                 android:inputType="none"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:textColor="@android:color/black"
                 android:textSize="18dp" />
 
@@ -167,10 +204,13 @@
                 android:id="@+id/time2Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="4"
+                android:layout_row="5"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="15dp"
                 android:text="End Time:"
                 android:textColor="@android:color/black"
                 android:textSize="24dp" />
@@ -179,10 +219,11 @@
                 android:id="@+id/sensorsTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="5"
+                android:layout_row="6"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
+                android:padding="10dp"
                 android:text="Sensors:"
                 android:textColor="@android:color/black"
                 android:textSize="24dp" />
@@ -191,24 +232,26 @@
                 android:id="@+id/sensorsSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="5"
+                android:layout_row="6"
                 android:layout_rowSpan="1"
                 android:layout_column="1"
                 android:layout_columnSpan="1"
+                android:padding="10dp"
                 android:theme="@style/AppTheme" />
 
             <Button
                 android:id="@+id/showButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="6"
+                android:layout_row="7"
                 android:layout_rowSpan="1"
                 android:layout_column="0"
                 android:layout_columnSpan="1"
-                android:onClick="showButtonClicked"
-                android:textColor="#000000"
                 android:background="#ffffff"
-                android:text="Show" />
+                android:onClick="showButtonClicked"
+                android:padding="10dp"
+                android:text="Show"
+                android:textColor="#000000" />
 
         </GridLayout>
     </ScrollView>

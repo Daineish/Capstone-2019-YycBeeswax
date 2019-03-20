@@ -76,18 +76,53 @@ public class HiveInfoActivity extends AppCompatActivity
         m_humidUB = (EditText) findViewById(R.id.humidUB);
         m_blockTime = (EditText) findViewById(R.id.blockTimeText);
 
+//        new ConnectTask().execute("");
+//
+//        try
+//        {
+//            Thread.sleep(1000);
+//        }
+//        catch (InterruptedException e) { }
+//
+//
+//        // Send Request for Available Hives
+//        if(m_tcpClient!=null)
+//            m_tcpClient.sendMessage("ANDROID_REQUEST HIVE_INFO " + m_selectedHive);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
         new ConnectTask().execute("");
 
         try
         {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         }
         catch (InterruptedException e) { }
-
-
         // Send Request for Available Hives
         if(m_tcpClient!=null)
             m_tcpClient.sendMessage("ANDROID_REQUEST HIVE_INFO " + m_selectedHive);
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
     }
 
     private void ShowHiveInfo(String response)
@@ -152,7 +187,8 @@ public class HiveInfoActivity extends AppCompatActivity
     public void onBackPressed()
     {
         super.onBackPressed();
-        m_tcpClient.stopClient();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
         finish();
     }
 }

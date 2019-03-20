@@ -156,10 +156,10 @@ public class ServerMain extends ServerSocket
         return sent;
     }
 
-    public ResultSet SendMessageToDatabase(String msg)
-    {
-        return db.SendArbitraryQuery(msg);
-    }
+//    public ResultSet SendMessageToDatabase(String msg)
+//    {
+//        return db.sendArbitraryQuery(msg);
+//    }
 
     public void SendMessageToClient(String msg)
     {
@@ -175,12 +175,17 @@ public class ServerMain extends ServerSocket
 
     public ResultSet GetHiveList()
     {
-        return db.GetHiveList();
+        return db.getHiveList();
     }
 
     public void UpdateHive(int hiveId, String loc, String owner, float tempLB,
                            float tempUB, float humidLB, float humidUB, float blockTime, int origId)
     {
-        db.UpdateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
+        db.updateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
+    }
+
+    public ResultSet GetSensorData(String hiveId, String start, String end, String sensor)
+    {
+        return db.getSensorData(hiveId, start, end, sensor);
     }
 }
