@@ -115,7 +115,7 @@ public class Database {
 	
 	/**
      * Gets the list of stakeholders and their notificationTypes from the database who are watching the hive with HiveID.
-     * @param hiveID - the hiveID where the data is coming from.
+     * @param HiveID - the hiveID where the data is coming from.
      * @return the list of stakeholders emails and notificationTypes in a ResultSet, or return a null if an error is detected
      */
 	public ResultSet getStakeholderEmail(int HiveID){
@@ -143,7 +143,7 @@ public class Database {
 	
 	/**
      * requests a threshold check, notifying stakeholders of failed check and stores the data in the database regardless
-     * @param hiveID - the hiveID where the data is coming from.
+     * @param hiveId - the hiveID where the data is coming from.
      * @param temp  - the temperature to send.
      * @param humid - the humidity to send.
      * @return true if successfully stored, else false.
@@ -224,13 +224,62 @@ public class Database {
 				return "passed";
 		}
 	}
+
+	public ResultSet SendArbitraryQuery(String str)
+	{
+		ResultSet rs = null;
+		try
+		{
+			PreparedStatement prepared = connection.prepareStatement(str);
+			rs = prepared.executeQuery();
+		}
+		catch(java.sql.SQLException e) { }
+
+		return rs;
+	}
+
+	public ResultSet GetHiveList()
+	{
+		ResultSet rs;
+		try
+		{
+			String query = "SELECT * FROM hiveinfo";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			//execute query and put result into result set rs
+			rs = prepared.executeQuery();
+		}
+		catch(SQLException e)
+		{return null;}//return null if failed to retrieve hiveinfo
+
+		return rs;
+	}
+
+	public void UpdateHive(int hiveId, String loc, String owner, float tempLB,
+						   float tempUB, float humidLB, float humidUB, float blockTime, int origId)
+	{
+		// TODO: fix
+		try
+		{
+			String query = "UPDATE hiveinfo SET HiveId = ?, Location = ?, Owner = ?, TempLB = ?, TempUB = ?, HumidLB = ?," +
+					"HumidUB = ?, BlockTime = ? WHERE HiveId = ?";
+			PreparedStatement prepared = connection.prepareStatement(query);
+			prepared.setInt(1, hiveId);
+			prepared.setString(2, loc);
+			prepared.setString(3, owner);
+			prepared.setFloat(4, tempLB);
+			prepared.setFloat(5, tempUB);
+			prepared.setFloat(6, humidLB);
+			prepared.setFloat(7, humidUB);
+			prepared.setFloat(8, blockTime);
+			prepared.setInt(9, origId);
+			prepared.executeUpdate();
+		}
+		catch(SQLException e) { System.err.println("Error: " + e.getMessage()); }
+	}
 	
 	public static void main(String[] args){
 		Database db = new Database();
 		db.storeSensorData(65, 25, 25);
-		
-		
-		
 	}
 	
 }

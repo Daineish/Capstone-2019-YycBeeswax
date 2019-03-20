@@ -1,19 +1,13 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class HiveInfoActivity extends AppCompatActivity
@@ -27,6 +21,41 @@ public class HiveInfoActivity extends AppCompatActivity
     private EditText m_humidLB;
     private EditText m_humidUB;
     private EditText m_blockTime;
+    private String m_origValues = "";
+    TcpClient m_tcpClient;
+
+    public class ConnectTask extends AsyncTask<String, String, TcpClient>
+    {
+        @Override
+        protected TcpClient doInBackground(String... message)
+        {
+            //we create a TCPClient object
+            m_tcpClient = new TcpClient(new TcpClient.OnMessageReceived()
+            {
+                @Override
+                //here the messageReceived method is implemented
+                public void messageReceived(String message)
+                {
+                    //this method calls the onProgressUpdate
+                    publishProgress(message);
+                }
+            });
+            m_tcpClient.run();
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values)
+        {
+            super.onProgressUpdate(values);
+            //response received from server
+            m_origValues = values[0];
+            ShowHiveInfo(values[0]);
+
+            m_tcpClient.stopClient();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -47,61 +76,83 @@ public class HiveInfoActivity extends AppCompatActivity
         m_humidUB = (EditText) findViewById(R.id.humidUB);
         m_blockTime = (EditText) findViewById(R.id.blockTimeText);
 
-        ShowHiveInfo();
-    }
-
-    private void ShowHiveInfo()
-    {
-        ResultSet hives = Database.getInstance().GetHives();
+        new ConnectTask().execute("");
 
         try
         {
-            while(hives.next())
-            {
-                int hiveVal = hives.getInt("HiveID");
-                if(hiveVal == m_selectedHive)
-                {
-                    m_hiveId.setText(String.valueOf(hiveVal));
-                    m_location.setText(hives.getString("Location"));
-                    m_owner.setText(hives.getString("Owner"));
-                    m_tempLB.setText(String.valueOf(hives.getFloat("TempLB")));
-                    m_tempUB.setText(String.valueOf(hives.getFloat("TempUB")));
-                    m_humidLB.setText(String.valueOf(hives.getFloat("HumidLB")));
-                    m_humidUB.setText(String.valueOf(hives.getFloat("HumidUB")));
-                    float blockSec = (hives.getFloat("BlockTime"));
-                    m_blockTime.setText(String.valueOf(blockSec/60.0)); // TODO: minutes (I hope)
-
-                    break;
-                }
-            }
+            Thread.sleep(2000);
         }
-        catch(Exception e)
-        {}
+        catch (InterruptedException e) { }
+
+
+        // Send Request for Available Hives
+        if(m_tcpClient!=null)
+            m_tcpClient.sendMessage("ANDROID_REQUEST HIVE_INFO " + m_selectedHive);
+    }
+
+    private void ShowHiveInfo(String response)
+    {
+        String[] data = response.split("_");
+
+        if(data.length != 8)
+        {
+            Log.e("Server", "Length should be 8, received: " + data.length);
+            return;
+        }
+
+        m_hiveId.setText(data[0]);
+        m_location.setText(data[1]);
+        m_owner.setText(data[2]);
+        m_tempLB.setText(data[3]);
+        m_tempUB.setText(data[4]);
+        m_humidLB.setText(data[5]);
+        m_humidUB.setText(data[6]);
+        m_blockTime.setText(data[7]); // TODO: minutes (I hope)
     }
 
     public void resetButtonClicked(View v)
     {
-        ShowHiveInfo();
+        ShowHiveInfo(m_origValues);
     }
 
     public void saveButtonClicked(View v)
     {
-        String loc = m_location.getText().toString();
-        String own = m_owner.getText().toString();
-        float tmlb = Float.valueOf(m_tempLB.getText().toString());
-        float tmub = Float.valueOf(m_tempUB.getText().toString());
-        float hmlb = Float.valueOf(m_humidLB.getText().toString());
-        float hmub = Float.valueOf(m_humidUB.getText().toString());
+        new ConnectTask().execute("");
+
+        try
+        {
+            Thread.sleep(1000);
+        }
+        catch (InterruptedException e) { }
+
+        String str = "ANDROID_REQUEST HIVE_UPDATE ";
+        str += m_hiveId.getText().toString() + "_";
+        str += m_location.getText().toString() + "_";
+        str += m_owner.getText().toString() + "_";
+        str += Float.valueOf(m_tempLB.getText().toString()) + "_";
+        str += Float.valueOf(m_tempUB.getText().toString()) + "_";
+        str += Float.valueOf(m_humidLB.getText().toString()) + "_";
+        str += Float.valueOf(m_humidUB.getText().toString()) + "_";
         float bltm = Float.valueOf(m_blockTime.getText().toString());
-        int hiveId = Integer.valueOf(m_hiveId.getText().toString());
-
         bltm *= 60.0; // TODO: check this works as expected
+        str += bltm + "_";
+        str += m_selectedHive;
 
-        Database.getInstance().UpdateHives(loc,own,tmlb,tmub,hmlb,hmub,bltm,hiveId);
+        Log.e("Sending", "sending: "+str);
+        m_tcpClient.sendMessage(str);
+        //Database.getInstance().UpdateHives(loc,own,tmlb,tmub,hmlb,hmub,bltm,hiveId);
     }
 
     public void AlertsOnOffClicked(View v)
     {
 
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        m_tcpClient.stopClient();
+        finish();
     }
 }
