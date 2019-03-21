@@ -218,6 +218,56 @@ class AndroidServer implements Runnable
                         str += sensorData + "_";
                     }
                 }
+                else if("STAKEHOLDER_LIST".equals(clientVals[1]))
+                {
+                    ResultSet rs = m_server.GetStakeholderList();
+                    while(rs.next())
+                    {
+                        //System.out.println("Get");
+                        String stakeholder = rs.getString("Name");
+                        int id = rs.getInt("StakeholderId");
+                        //System.out.println("Stake: " + stakeholder);
+                        str += stakeholder + "_" + id + "_";
+                    }
+                }
+                else if("STAKEHOLDER_INFO".equals(clientVals[1]))
+                {
+                    int id = Integer.parseInt(clientVals[2]);
+                    String name = m_server.GetStakeholderName(id);
+
+                    Utilities.AssertMessage(name != "", true, "Stakeholder not found!");
+                    ResultSet rs = m_server.GetStakeholderInfo(name);
+
+                    while(rs.next())
+                    {
+                        int hiveId = rs.getInt("HiveId");
+                        String notif = rs.getString("NotificationType");
+
+                        str += hiveId + " " + notif + "_";
+                    }
+                }
+                else if("STAKEHOLDER_UPDATE".equals(clientVals[1]))
+                {
+                    int stakeholder = Integer.parseInt(clientVals[2]);
+                    int numHives = Integer.parseInt(clientVals[3]);
+                    String name = m_server.GetStakeholderName(stakeholder);
+                    String data = clientVals[4];
+                    String[] vals = data.split("_");
+                    if(vals.length != (numHives*4))
+                    {
+                        System.err.println("Length should be: " + ((numHives*4)) + " got: " + vals.length);
+                        return;
+                    }
+                    for(int i = 0; i < numHives; i++)
+                    {
+                        int hive = Integer.parseInt(vals[i*4 + 0]);
+                        boolean b = Boolean.parseBoolean(vals[i*4 + 1]);
+                        boolean h = Boolean.parseBoolean(vals[i*4 + 2]);
+                        boolean t = Boolean.parseBoolean(vals[i*4 + 3]);
+
+                        m_server.UpdateWatching(hive, name, t, h, b);
+                    }
+                }
                 else
                 {
                     Utilities.AssertMessage(false, true, "Unknown SQL cmd received: " + clientVals[1]);

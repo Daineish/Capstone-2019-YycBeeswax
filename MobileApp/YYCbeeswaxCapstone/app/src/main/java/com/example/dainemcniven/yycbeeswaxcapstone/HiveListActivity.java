@@ -14,10 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
 
 public class HiveListActivity extends AppCompatActivity
 {
@@ -63,20 +59,6 @@ public class HiveListActivity extends AppCompatActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hivelist);
-
-        // TODO: Access the database or whatever and list what hives are available
-//        new ConnectTask().execute("");
-//
-//        try
-//        {
-//            Thread.sleep(1000);
-//        }
-//        catch (InterruptedException e) { }
-//
-//
-//        // Send Request for Available Hives
-//        if(m_tcpClient!=null)
-//            m_tcpClient.sendMessage("ANDROID_REQUEST HIVE_LIST");
     }
 
     View.OnClickListener myhandler1 = new View.OnClickListener()

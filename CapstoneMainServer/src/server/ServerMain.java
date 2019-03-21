@@ -10,6 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * This class creates a server which acts at the communication point between
@@ -178,6 +179,16 @@ public class ServerMain extends ServerSocket
         return db.getHiveList();
     }
 
+    public ResultSet GetStakeholderList()
+    {
+        return db.getStakeholderList();
+    }
+
+    public ResultSet GetStakeholderInfo(String name)
+    {
+        return db.getWatchingList(name);
+    }
+
     public void UpdateHive(int hiveId, String loc, String owner, float tempLB,
                            float tempUB, float humidLB, float humidUB, float blockTime, int origId)
     {
@@ -187,5 +198,31 @@ public class ServerMain extends ServerSocket
     public ResultSet GetSensorData(String hiveId, String start, String end, String sensor)
     {
         return db.getSensorData(hiveId, start, end, sensor);
+    }
+
+    public boolean UpdateWatching(int hive, String name, boolean t, boolean h, boolean b)
+    {
+        return db.setNotificationType(hive, name, t, h, b);
+    }
+
+    public String GetStakeholderName(int id)
+    {
+        String name = "";
+        try
+        {
+            ResultSet rs1 = GetStakeholderList();
+            while(rs1.next())
+            {
+                int st = rs1.getInt("StakeholderId");
+                if(st == id)
+                {
+                    name = rs1.getString("Name");
+                    break;
+                }
+            }
+        }
+        catch(SQLException e) {}
+        return name;
+
     }
 }
