@@ -11,7 +11,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class Database {
+public class Database 
+{
 
 	private Connection connection;
 	private NotificationHandler handler;
@@ -24,15 +25,16 @@ public class Database {
 	
 	public Database()
 	{
-		getProperties();
+		GetProperties();
 		handler = new NotificationHandler(fromEmail, fromPass);
-		initializeConnection();
+		InitializeConnection();
 	}
 	
-	public void getProperties(){
-		
+	public void GetProperties()
+	{
 		FileInputStream inStream;
-		try{
+		try
+		{
 			Properties properties = new Properties();
 			inStream = new FileInputStream("config.properties");
 			properties.load(inStream);
@@ -45,15 +47,16 @@ public class Database {
 			fromPass = properties.getProperty("fromPass");
 			inStream.close();
 			
-		}catch (IOException e){
+		}catch (IOException e)
+		{
 			e.printStackTrace();
 			System.exit(1);
 		}
 	}
 	
-	public void initializeConnection()
+	public void InitializeConnection()
 	{
-		try 
+		try
 		{
 			//attempt to start connection with config file values
 			connection = DriverManager.getConnection(database, username, password);
@@ -62,11 +65,13 @@ public class Database {
 		{
 			//exit if db connection fails and print error log
 			e.printStackTrace();
+			CloseConnection();
 			System.exit(1);
 		}
 	}
 	
-	public void closeConnection(){
+	public void CloseConnection()
+	{
 		try
 		{
 			//close database connection
@@ -83,17 +88,18 @@ public class Database {
 	
 	/**
      * Gets the BlockageThreshhold for a given hiveID, needed PCB side to know when to send alerts on blockage
-     * @param HiveID - the hiveID of the PCB starting up
+     * @param hiveId - the hiveID of the PCB starting up
      * @return the BlockTime from the database, return -1 on error
      */
-	public float getBlockTime(int HiveID){
+	public float GetBlockTime(int hiveId)
+	{
 		try
 		{
 			ResultSet rs;
 			//build query to be executed
 			String query = "SELECT BlockTime FROM hiveinfo WHERE HiveId = ?";
 			PreparedStatement prepared = connection.prepareStatement(query);
-			prepared.setInt(1, HiveID);
+			prepared.setInt(1, hiveId);
 			//execute query and put result into result set rs
 			rs = prepared.executeQuery();
 			
@@ -113,7 +119,8 @@ public class Database {
      * @param HiveID - the hiveID where the data is coming from.
      * @return the list of stakeholders emails and notificationTypes in a ResultSet, or return a null if an error is detected
      */
-	public ResultSet getStakeholderEmail(int HiveID){
+	public ResultSet GetStakeholderEmail(int hiveId)
+	{
 		try
 		{
 			ResultSet rs;
@@ -122,7 +129,7 @@ public class Database {
 			//get email and notification type for stakeholders watching the hive who's notificationType isn't set to NONE
 			String query = "SELECT stakeholder.Email, watching.NotificationType FROM stakeholder INNER JOIN watching ON stakeholder.Name = watching.Name WHERE watching.HiveID = ? AND watching.NotificationType != ?";
 			PreparedStatement prepared = connection.prepareStatement(query);
-			prepared.setInt(1, HiveID);
+			prepared.setInt(1, hiveId);
 			prepared.setString(2, "NONE");
 			//execute query and put result into result set rs
 			rs = prepared.executeQuery();
@@ -142,14 +149,16 @@ public class Database {
      * @param humid - the humidity to send.
      * @return true if successfully stored, else false.
      */
-	public boolean storeSensorData(int hiveId, float temp, float humid){
+	public boolean StoreSensorData(int hiveId, float temp, float humid)
+	{
 		try
 		{
 			//perform check to see if notification required
-			String checkResult = thresholdCheck(hiveId, temp, humid);
-			if(!checkResult.equals("passed")){
-				ResultSet list = getStakeholderEmail(hiveId);
-				handler.notifyStakeholders(list, hiveId, checkResult, temp, humid, 0);
+			String checkResult = ThresholdCheck(hiveId, temp, humid);
+			if(!checkResult.equals("passed"))
+			{
+				ResultSet list = GetStakeholderEmail(hiveId);
+				handler.NotifyStakeholders(list, hiveId, checkResult, temp, humid, 0);
 			}
 			
 			//prepared statement for security AND for ease of reading
@@ -186,11 +195,12 @@ public class Database {
      * @param blockTime - time entrance was blocked, to be stored in database
      * @return true if successfully stored, else false.
      */
-	public boolean storeBlockage(int hiveId, float blockTime){
+	public boolean StoreBlockage(int hiveId, float blockTime)
+	{
 		try
 		{	
-			ResultSet list = getStakeholderEmail(hiveId);
-			handler.notifyStakeholders(list, hiveId, "B", 0, 0, blockTime);
+			ResultSet list = GetStakeholderEmail(hiveId);
+			handler.NotifyStakeholders(list, hiveId, "B", 0, 0, blockTime);
 			//prepared statement for security AND for ease of reading
 			String query = "INSERT INTO sensordata (HiveId, Time, SensorType, SensorData) VALUES (?, NOW(), ?, ?)";
 			PreparedStatement prepared = connection.prepareStatement(query);
@@ -220,7 +230,8 @@ public class Database {
      * @param humid - the humidity to check
      * @return returns passed if no bounds were exceeded, otherwise, returns T, H, or TH corresponding to the exceeded bounds
      */
-	public String thresholdCheck(int hiveId, float temp, float humid)throws SQLException{
+	private String ThresholdCheck(int hiveId, float temp, float humid)throws SQLException
+	{
 		int notificationCase = 0;//used to track what values failed the check
 		ResultSet rs;
 		String query = "SELECT * FROM hiveinfo WHERE HiveId = ?";
@@ -229,15 +240,18 @@ public class Database {
 		rs = prepared.executeQuery();
 		rs.next();
 		//check if temperature is within bounds
-		if(temp > rs.getFloat("TempUB") || temp < rs.getFloat("TempLB")){
+		if(temp > rs.getFloat("TempUB") || temp < rs.getFloat("TempLB"))
+		{
 			notificationCase += 1;
 		}
 		//check if humidity is within bounds
-		if(humid > rs.getFloat("HumidUB") || humid < rs.getFloat("HumidLB")){
+		if(humid > rs.getFloat("HumidUB") || humid < rs.getFloat("HumidLB"))
+		{
 			notificationCase += 2;
 		}
 		//0 = all passed, 1 = temp failed, 2 = humidity failed, 3 = both failed, default to passed
-		switch(notificationCase){
+		switch(notificationCase)
+		{
 			case 0:
 				return "passed";
 			case 1:
@@ -263,9 +277,12 @@ public class Database {
      * prints sensor data from a ResultSet to the console in a readable format, used for testing
      * @param rs - the ResultSet to be printed
      */
-	public void printSensorData(ResultSet rs){
-		try{
-			while(rs.next()){
+	public void PrintSensorData(ResultSet rs)
+	{
+		try
+		{
+			while(rs.next())
+			{
 				System.out.println("HiveId: " + rs.getString("HiveId") + "	Time: " + rs.getString("Time") + "	Type: " + rs.getString("SensorType") + "	Data: " + rs.getString("SensorData") + "\n");
 			}
 		}catch (SQLException e) 
@@ -279,7 +296,7 @@ public class Database {
      * retrieves the list of all hives from database
      * @return returns a ResultSet containing all hiveinfo for every hive in database
      */
-	public ResultSet getHiveList()
+	public ResultSet GetHiveList()
 	{
 		ResultSet rs;
 		try
@@ -290,7 +307,10 @@ public class Database {
 			rs = prepared.executeQuery();
 		}
 		catch(SQLException e)
-		{return null;}//return null if failed to retrieve hiveinfo
+		{
+			e.printStackTrace();
+			return null;
+		}//return null if failed to retrieve hiveinfo
 
 		return rs;
 	}
@@ -299,7 +319,8 @@ public class Database {
      * retrieves the list of all stakeholders from database
      * @return returns a ResultSet containing all stakeholders and associated data
      */
-	public ResultSet getStakeholderList(){
+	public ResultSet GetStakeholderList()
+	{
 		try
 		{
 			ResultSet rs;
@@ -322,7 +343,8 @@ public class Database {
      * @param stakeholderName - the name of the stakeholder to retrieve all associated watching rows for
      * @return returns a ResultSet containing all watching rows and associated data where stakeholderName = Name
      */
-	public ResultSet getWatchingList(String stakeholderName){
+	public ResultSet GetWatchingList(String stakeholderName)
+	{
 		try
 		{
 			ResultSet rs;
@@ -354,7 +376,7 @@ public class Database {
      * @param origId - the original hiveId of the hive prior to requesting update, used to find the correct hive for purpose of the update 
      * @return returns true if update was successful, false otherwise
      */
-	public boolean updateHive(int hiveId, String loc, String owner, float tempLB,
+	public boolean UpdateHive(int hiveId, String loc, String owner, float tempLB,
 						   float tempUB, float humidLB, float humidUB, float blockTime, int origId)
 	{
 		try
@@ -384,17 +406,18 @@ public class Database {
 	/**
      * updates a stakeholder row in database corresponding to the stakeholderId in database equal to "stakeholderId"
      * @param stakeholderId - the stakeholderId used to identify the stakeholder
-     * @param name  - the updated stakeholder name
-     * @param email - the updated stakeholder email
+     * @param stakeholderName  - the updated stakeholder name
+     * @param stakeholderEmail - the updated stakeholder email
      * @return returns true if update was successful, false otherwise
      */
-	public boolean updateStakeholder(int stakeholderId, String name, String email){
+	public boolean UpdateStakeholder(int stakeholderId, String stakeholderName, String stakeholderEmail)
+	{
 		try
 		{
 			String query = "UPDATE stakeholder SET Name = ?, Email = ? WHERE StakeholderId = ?";
 			PreparedStatement prepared = connection.prepareStatement(query);
-			prepared.setString(1, name);
-			prepared.setString(2, email);
+			prepared.setString(1, stakeholderName);
+			prepared.setString(2, stakeholderEmail);
 			prepared.setInt(3, stakeholderId);
 			prepared.executeUpdate();
 			return true;
@@ -417,7 +440,8 @@ public class Database {
      * @param sensorType - the sensorType of the data to retrieve, setting it to null retrieves all sensor types (TEMP, HUMIDITY, BLOCK)
      * @return returns a ResultSet of all data satisfying the query, or null if error occurs
      */
-	public ResultSet getSensorData(String HiveId, String fromTime, String toTime, String sensorType){
+	public ResultSet GetSensorData(String hiveId, String fromTime, String toTime, String sensorType)
+	{
 		try
 		{
 			ResultSet rs;
@@ -427,8 +451,8 @@ public class Database {
 			//String query = "SELECT * FROM sensordata WHERE HiveId = ? AND Time BETWEEN ? AND ? AND SensorType = ?";
 			String query = "SELECT * FROM sensordata WHERE (HiveId = ? OR (HiveId IS NOT NULL AND ? IS NULL)) AND (SensorType = ? OR (SensorType IS NOT NULL AND ? IS NULL)) AND (Time BETWEEN ? AND ?)";
 			PreparedStatement prepared = connection.prepareStatement(query);
-			prepared.setString(1, HiveId);
-			prepared.setString(2, HiveId);
+			prepared.setString(1, hiveId);
+			prepared.setString(2, hiveId);
 			prepared.setString(3, sensorType);
 			prepared.setString(4, sensorType);
 			prepared.setDate(5, Date.valueOf(fromTime));
@@ -454,19 +478,23 @@ public class Database {
      * @param watchBlock - a boolean whose value reflects whether or not the stakeholder wants to be notified of a blockage beyond threshold
      * @return returns true if update was successful, false otherwise
      */
-	public boolean setNotificationType(int hiveId, String stakeholderName, boolean watchTemp, boolean watchHumid, boolean watchBlock){
+	public boolean SetNotificationType(int hiveId, String stakeholderName, boolean watchTemp, boolean watchHumid, boolean watchBlock)
+	{
 		//construct the notification type based on watch stakeholder wants to watch
 		String notifyType = "";
-		if(watchTemp){
+		if(watchTemp)
+		{
 			notifyType += "T";
 		}
-		if(watchHumid){
+		if(watchHumid)
+		{
 			notifyType += "H";
 		}
 		if(watchBlock){
 			notifyType += "B";
 		}
-		if(notifyType.equals("")){ //if no types are watched, set type to NONE
+		if(notifyType.equals(""))
+		{ //if no types are watched, set type to NONE
 			notifyType = "NONE";
 		}
 		
@@ -493,9 +521,10 @@ public class Database {
 	
 	
 	
-	public static void main(String[] args){
+	public static void main(String[] args)
+	{
 		Database db = new Database();
-		db.storeBlockage(20, 65666);
+		db.StoreBlockage(20, 65666);
 		
 		/*//for populating database with fake sensor data for testing
 		int hiveId;
