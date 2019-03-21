@@ -61,19 +61,19 @@ public class ChangeAlertBounds extends AppCompatActivity
         // send data to database
     }
 
-    public void AlertsOnOffClicked(View v)
-    {
-        // TODO: turn alerts on or off in database depending on state
-        ToggleButton toggle = (ToggleButton) findViewById(R.id.alertsOnOff);
-        if(toggle.isChecked())
-        {
-            // turn alerts on
-            Log.e("a", "turning alerts on");
-        }
-        else
-        {
-            // turn alerts off
-            Log.e("a", "turning alerts off");
-        }
-    }
+//    public void AlertsOnOffClicked(View v)
+//    {
+//        // TODO: turn alerts on or off in database depending on state
+//        ToggleButton toggle = (ToggleButton) findViewById(R.id.alertsOnOff);
+//        if(toggle.isChecked())
+//        {
+//            // turn alerts on
+//            Log.e("a", "turning alerts on");
+//        }
+//        else
+//        {
+//            // turn alerts off
+//            Log.e("a", "turning alerts off");
+//        }
+//    }
 }
