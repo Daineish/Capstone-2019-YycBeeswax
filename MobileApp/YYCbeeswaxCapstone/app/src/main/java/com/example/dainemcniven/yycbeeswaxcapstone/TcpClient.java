@@ -13,7 +13,7 @@ public class TcpClient
 {
 
     public static final String TAG = TcpClient.class.getSimpleName();
-    public static final String SERVER_IP = "192.168.1.68"; //server IP address
+    public static final String SERVER_IP = "10.13.132.213"; //server IP address
     public static final int SERVER_PORT = 4445;
     // message to send to the server
     private String mServerMessage;

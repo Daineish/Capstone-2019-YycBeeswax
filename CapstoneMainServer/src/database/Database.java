@@ -91,7 +91,7 @@ public class Database {
 		{
 			ResultSet rs;
 			//build query to be executed
-			String query = "SELECT BlockTime FROM hiveinfo WHERE watching.HiveID = ?";
+			String query = "SELECT BlockTime FROM hiveinfo WHERE HiveId = ?";
 			PreparedStatement prepared = connection.prepareStatement(query);
 			prepared.setInt(1, HiveID);
 			//execute query and put result into result set rs
