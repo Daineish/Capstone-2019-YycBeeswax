@@ -183,6 +183,7 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
         List<String> spinnerArray =  new ArrayList<>();
         spinnerArray.add("Temperature");
         spinnerArray.add("Humidity");
+        spinnerArray.add("Blockages");
         spinnerArray.add("All");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                 this, android.R.layout.simple_spinner_item, spinnerArray);

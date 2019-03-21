@@ -198,6 +198,8 @@ class AndroidServer implements Runnable
                         sensor = "TEMP";
                     else if("Humidity".equals(sensor))
                         sensor = "HUMIDITY";
+                    else if("Blockages".equals(sensor))
+                        sensor = "BLOCKAGE";
 
                     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                     String start = format.format(new Date(Long.parseLong(data[2])));

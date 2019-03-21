@@ -152,6 +152,8 @@ public class HiveInfoActivity extends AppCompatActivity
 
     public void saveButtonClicked(View v)
     {
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
         new ConnectTask().execute("");
 
         try
