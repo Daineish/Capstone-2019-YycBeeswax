@@ -156,7 +156,12 @@ class AndroidServer implements Runnable
                 {
                     String dataStr = "";
                     for(int i = 2; i < clientVals.length; i++)
+                    {
+                        if(i != 2)
+                            dataStr += " ";
                         dataStr += clientVals[i];
+                    }
+
                     String[] data = dataStr.split("_");
 
                     if(data.length != 9)

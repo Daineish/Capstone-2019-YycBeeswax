@@ -64,7 +64,12 @@ public class CameraListActivity extends AppCompatActivity
         for(int i = 0; i < 2; i++)
         {
             TextView cam0 = new TextView(this);
-            cam0.setText("Camera " + i);
+            if(i == 0)
+                cam0.setText("Inside Camera");
+            else
+                cam0.setText("Outside Camera");
+            cam0.setTextColor(Color.BLACK);
+            cam0.setTextSize(24);
             cam0.setOnClickListener(myhandler1);
             cam0.setTag(i);
             linearLayout.addView(cam0);
