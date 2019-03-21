@@ -66,17 +66,17 @@ class DeviceServer implements Runnable
             {
                 // Temperature/Humidity Sensor
                 Utilities.AssertMessage(clientVals.length == 4, true, "Incorrect number of values received from TH sensor");
-                int hiveID = Integer.parseInt(clientVals[1]);
+                int hiveId = Integer.parseInt(clientVals[1]);
                 float temp = Float.parseFloat(clientVals[2]);
                 float humid = Float.parseFloat(clientVals[3]);
-                m_server.SendTempHumidToDatabase(hiveID, temp, humid);
+                m_server.SendTempHumidToDatabase(hiveId, temp, humid);
             }
             else if(Utilities.g_blockageSensor.equals(clientVals[0]))
             {
                 Utilities.AssertMessage(clientVals.length == 3, true, "Incorrect number of values received from IR sensor");
-                int hiveID = Integer.parseInt(clientVals[1]);
+                int hiveId = Integer.parseInt(clientVals[1]);
                 boolean blocked = Boolean.parseBoolean(clientVals[2]);
-                m_server.IsBlocked(hiveID, blocked);
+                m_server.IsBlocked(hiveId, blocked);
             }
             else
             {
@@ -131,8 +131,8 @@ class AndroidServer implements Runnable
                     ResultSet rs = m_server.GetHiveList();
                     while(rs.next())
                     {
-                        int hiveID = rs.getInt("HiveId");
-                        str += hiveID + " ";
+                        int hiveId = rs.getInt("HiveId");
+                        str += hiveId + " ";
                     }
                 }
                 else if("HIVE_INFO".equals(clientVals[1]))

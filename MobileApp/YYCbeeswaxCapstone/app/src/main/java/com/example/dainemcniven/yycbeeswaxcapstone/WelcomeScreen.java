@@ -37,14 +37,6 @@ public class WelcomeScreen extends AppCompatActivity
         WelcomeScreen.this.startActivity(myIntent);
     }
 
-    public void alertsClicked(View v)
-    {
-        Log.e("note", "alert clicked");
-        Intent myIntent = new Intent(WelcomeScreen.this, AlertsActivity.class);
-        myIntent.putExtra("key", ""); //Optional parameters
-        WelcomeScreen.this.startActivity(myIntent);
-    }
-
     public void hivesClicked(View v)
     {
         Log.e("note", "hives clicked");

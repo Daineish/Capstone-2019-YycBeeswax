@@ -125,50 +125,50 @@ void loop()
         client.stop();
     }
 
-  // Check that we're still connected to WiFi
-  if(rateB > B_POLL_RATE)
-  {
-      if(WiFi.status() != WL_CONNECTED)
-      {
-          Serial.print("Trying to reconnect to WiFi");
-          while(WiFi.status() != WL_CONNECTED)
-          {
-              delay(500);
-              Serial.print(".");
-          }
-          Serial.print("WiFi connected");
-      }
+    // Check that we're still connected to WiFi
+    if(rateB > B_POLL_RATE)
+    {
+        if(WiFi.status() != WL_CONNECTED)
+        {
+            Serial.print("Trying to reconnect to WiFi");
+            while(WiFi.status() != WL_CONNECTED)
+            {
+                delay(500);
+                Serial.print(".");
+            }
+            Serial.print("WiFi connected");
+        }
 
-      Serial.print("\nConnecting to ");
-      Serial.print(host);
-      Serial.print(':');
-      Serial.println(port);
+        Serial.print("\nConnecting to ");
+        Serial.print(host);
+        Serial.print(':');
+        Serial.println(port);
 
-      // Use WiFiClient class to create TCP connections
-      WiFiClient client;
-      if (!client.connect(host, port))
-      {
-          Serial.println("connection failed");
-          delay(1000);
-          return;
-      }
+        // Use WiFiClient class to create TCP connections
+        WiFiClient client;
+        if (!client.connect(host, port))
+        {
+            Serial.println("connection failed");
+            delay(1000);
+            return;
+        }
 
-      // This will send our blockages
-      if (client.connected())
-      {
-          String str = g_datatypeB + " " + g_hiveID + " ";
-          if((digitalRead(16))==0 && digitalRead(14)==0)
-              str += "false";
-           else
-              str += "true";
-           Serial.println("Sending: " + str);
-           client.println(str);
-           rateB = 0;
-      }
-      Serial.println();
-      Serial.println("Closing connection");
-      client.stop();
-  }
+        // This will send our blockages
+        if (client.connected())
+        {
+            String str = g_datatypeB + " " + g_hiveID + " ";
+            if((digitalRead(16))==0 && digitalRead(14)==0)
+                str += "false";
+             else
+                str += "true";
+             Serial.println("Sending: " + str);
+             client.println(str);
+             rateB = 0;
+        }
+        Serial.println();
+        Serial.println("Closing connection");
+        client.stop();
+    }
 
     delay(100);
     rateTH += 100;

@@ -111,7 +111,7 @@ public class ServerMain extends ServerSocket
         try
         {
             //Utilities.AssertMessage(false, false, "Sending data to database not yet implemented.");
-            sent = db.storeSensorData(hiveID, temp, humid);
+            sent = db.StoreSensorData(hiveID, temp, humid);
         }
         catch(Exception e) { }
 
@@ -160,7 +160,7 @@ public class ServerMain extends ServerSocket
 
 //    public ResultSet SendMessageToDatabase(String msg)
 //    {
-//        return db.sendArbitraryQuery(msg);
+//        return db.SendArbitraryQuery(msg);
 //    }
 
     public void SendMessageToClient(String msg)
@@ -177,33 +177,33 @@ public class ServerMain extends ServerSocket
 
     public ResultSet GetHiveList()
     {
-        return db.getHiveList();
+        return db.GetHiveList();
     }
 
     public ResultSet GetStakeholderList()
     {
-        return db.getStakeholderList();
+        return db.GetStakeholderList();
     }
 
     public ResultSet GetStakeholderInfo(String name)
     {
-        return db.getWatchingList(name);
+        return db.GetWatchingList(name);
     }
 
     public void UpdateHive(int hiveId, String loc, String owner, float tempLB,
                            float tempUB, float humidLB, float humidUB, float blockTime, int origId)
     {
-        db.updateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
+        db.UpdateHive(hiveId, loc, owner, tempLB, tempUB, humidLB, humidUB, blockTime, origId);
     }
 
     public ResultSet GetSensorData(String hiveId, String start, String end, String sensor)
     {
-        return db.getSensorData(hiveId, start, end, sensor);
+        return db.GetSensorData(hiveId, start, end, sensor);
     }
 
     public boolean UpdateWatching(int hive, String name, boolean t, boolean h, boolean b)
     {
-        return db.setNotificationType(hive, name, t, h, b);
+        return db.SetNotificationType(hive, name, t, h, b);
     }
 
     public String GetStakeholderName(int id)
