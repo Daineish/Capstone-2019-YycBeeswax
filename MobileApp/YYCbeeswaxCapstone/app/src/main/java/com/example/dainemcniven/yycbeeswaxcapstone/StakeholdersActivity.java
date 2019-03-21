@@ -2,6 +2,7 @@ package com.example.dainemcniven.yycbeeswaxcapstone;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -146,8 +147,20 @@ public class StakeholdersActivity extends AppCompatActivity
             hive.setTextColor(Color.BLACK);
             hive.setOnClickListener(myhandler1);
             hive.setTag(shs[i+1]);
-            hive.setPadding(0,40,0,0);
+            hive.setPadding(0,0,0,0);
+            hive.setMinHeight(200);
+            hive.setBackground(getResources().getDrawable(R.drawable.button1));
+            hive.setGravity(Gravity.CENTER);
             linearLayout.addView(hive);
+
+            View v2 = new View(this);
+            LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            params2.gravity = Gravity.CENTER;
+            params2.width = LinearLayout.LayoutParams.MATCH_PARENT;
+            params2.height = 3;
+            v2.setBackgroundColor(Color.BLACK);
+            v2.setLayoutParams(params2);
+            linearLayout.addView(v2);
         }
     }
 

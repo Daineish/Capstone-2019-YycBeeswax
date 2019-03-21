@@ -28,7 +28,7 @@
                 android:onClick="camerasClicked"
                 android:text="Cameras"
                 android:textAlignment="viewStart"
-                android:textColor="@color/yellow"
+                android:textColor="#ffff00"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
                 android:onClick="sensorsClicked"
                 android:text="Sensors"
                 android:textAlignment="viewStart"
-                android:textColor="@color/yellow"
+                android:textColor="#ffff00"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -87,7 +87,7 @@
                 android:onClick="hivesClicked"
                 android:text="Hives"
                 android:textAlignment="viewStart"
-                android:textColor="@color/yellow"
+                android:textColor="#ffff00"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -107,7 +107,7 @@
                 android:onClick="stClicked"
                 android:text="Stakeholders"
                 android:textAlignment="viewStart"
-                android:textColor="@color/yellow"
+                android:textColor="#ffff00"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 

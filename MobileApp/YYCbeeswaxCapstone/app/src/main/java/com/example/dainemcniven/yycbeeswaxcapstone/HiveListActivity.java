@@ -146,7 +146,10 @@ public class HiveListActivity extends AppCompatActivity
             hive.setTextColor(Color.BLACK);
             hive.setOnClickListener(myhandler1);
             hive.setTag(hives[i]);
-            hive.setPadding(0,40,0,0);
+            hive.setPadding(0,0,0,0);
+            hive.setGravity(Gravity.CENTER);
+            hive.setBackground(getResources().getDrawable(R.drawable.button1));
+            hive.setMinHeight(200);
             linearLayout.addView(hive);
 
 //            View v = new View(this);
