@@ -28,7 +28,7 @@ public class ServerMain extends ServerSocket
 	private boolean m_isBlocked = false;
 	private long m_elapsedTime = 0;
 	private long m_startTime = 0;
-	private long m_cooldown = 20000; // 20 seconds
+	private long m_cooldown = 120000; // 20 seconds
 	private long m_previousTime = 0;
 	private Socket m_socket = null;
 
@@ -58,33 +58,25 @@ public class ServerMain extends ServerSocket
             if(blocked)
             {
                 // was blocked & is still blocked, check time blocked.
-                long elapsed = System.nanoTime() - m_startTime;
-                elapsed /= 1000000000; // 10^9 -> should be in seconds now.
+                long elapsed = System.currentTimeMillis() - m_startTime;
+                elapsed /= 1000; // 10^3 -> should be in seconds now.
                 System.out.println("Blocked: Checking for alert: " + elapsed);
-                if(db.getBlockTime(hiveID) != -1 && elapsed > db.getBlockTime(hiveID))
+                if(db.getBlockTime(hiveID) >= 0 && elapsed > db.getBlockTime(hiveID))
                 {
-                    if(m_cooldown < (System.nanoTime() - m_previousTime))
+                    if(m_cooldown < ((System.currentTimeMillis()) - m_previousTime))
                     {
                         System.out.println("SEND ALERT");
-                        m_previousTime = System.nanoTime();
+                        m_previousTime = System.currentTimeMillis();
+                        db.storeBlockage(hiveID, elapsed);
                         // has been blocked for elapsed
                         // last email send at m_previousTime
                     }
-//                    // Send alert TODO
-//                    System.out.println("SEND ALERT");
-//                    //storeBlockageData(hiveID, elapsed);
-//
-//                    // Reset timer
-//                    m_isBlocked = false;
-//                    m_startTime = 0;
-
                 }
             }
             else
             {
                 // was blocked & no longer blocked, reset timer
                 m_isBlocked = false;
-                m_previousTime = 0;
                 m_startTime = 0;
             }
         }
@@ -94,7 +86,7 @@ public class ServerMain extends ServerSocket
             {
                 // wasn't blocked & is now blocked, start timer
                 System.out.println("Blocked: Timer started");
-                m_startTime = System.nanoTime();
+                m_startTime = System.currentTimeMillis();
                 m_isBlocked = true;
             }
             else

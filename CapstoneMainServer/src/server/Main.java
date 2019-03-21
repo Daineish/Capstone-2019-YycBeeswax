@@ -62,15 +62,20 @@ class DeviceServer implements Runnable
             List<String> clientStrings = Arrays.asList(clientVals);
 
 
-            if(Utilities.g_tempHumidIrSensor.equals(clientVals[0]))
+            if(Utilities.g_tempHumidSensor.equals(clientVals[0]))
             {
                 // Temperature/Humidity Sensor
-                Utilities.AssertMessage(clientVals.length == 5, true, "Incorrect number of values received from sensors");
+                Utilities.AssertMessage(clientVals.length == 4, true, "Incorrect number of values received from TH sensor");
                 int hiveID = Integer.parseInt(clientVals[1]);
                 float temp = Float.parseFloat(clientVals[2]);
                 float humid = Float.parseFloat(clientVals[3]);
-                boolean blocked = Boolean.parseBoolean(clientVals[4]);
                 m_server.SendTempHumidToDatabase(hiveID, temp, humid);
+            }
+            else if(Utilities.g_blockageSensor.equals(clientVals[0]))
+            {
+                Utilities.AssertMessage(clientVals.length == 3, true, "Incorrect number of values received from IR sensor");
+                int hiveID = Integer.parseInt(clientVals[1]);
+                boolean blocked = Boolean.parseBoolean(clientVals[2]);
                 m_server.IsBlocked(hiveID, blocked);
             }
             else

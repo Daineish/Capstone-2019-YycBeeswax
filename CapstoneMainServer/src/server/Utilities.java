@@ -8,7 +8,8 @@ public class Utilities
     public static final boolean g_printDebugMessage = true;
 
     // Constants for data types received from devices.
-    public static final String g_tempHumidIrSensor = "THIR_SENSOR";
+    public static final String g_tempHumidSensor = "TH_SENSOR";
+    public static final String g_blockageSensor = "B_SENSOR";
     public static final String g_androidRequest = "ANDROID_REQUEST";
 
     /**

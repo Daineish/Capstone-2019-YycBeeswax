@@ -17,7 +17,11 @@
 DHT dht(DHTPIN, DHTTYPE);
 
 // Temperature/Humidity/IR sensor
-const String g_datatype = "THIR_SENSOR";
+const String g_datatypeTH = "TH_SENSOR";
+const String g_datatypeB = "B_SENSOR";
+
+const long TH_POLL_RATE = 20000;
+const long B_POLL_RATE = 10000;
 
 // Hive ID (CHANGE FOR EACH HIVE)
 const int g_hiveID = 65;
@@ -63,10 +67,11 @@ void setup()
     Serial.println(WiFi.localIP());
 }
 
-int rate = 0;
+int rateTH = 0;
+int rateB = 0;
 void loop()
 {
-    if(rate > 10000)
+    if(rateTH > TH_POLL_RATE)
     {
         // Check that we're still connected to WiFi
         if(WiFi.status() != WL_CONNECTED)
@@ -104,18 +109,15 @@ void loop()
             if(isnan(humid) || isnan(temp))
             {
                 Serial.println("Failed to read data from sensor");
-                rate = 0;
+                rateTH = 0;
                 return;
             }
 
-            String str = g_datatype + " " + g_hiveID + " " + String(temp) + " " + String(humid) + " ";
-            if((digitalRead(16))==0 && digitalRead(14)==0)
-                str += "false";
-            else
-                str += "true";
+            String str = g_datatypeTH + " " + g_hiveID + " " + String(temp) + " " + String(humid);
+            
             Serial.println("Sending: " + str);
             client.println(str);
-            rate = 0;
+            rateTH = 0;
         }
         // Close the connection
         Serial.println();
@@ -123,6 +125,52 @@ void loop()
         client.stop();
     }
 
+  // Check that we're still connected to WiFi
+  if(rateB > B_POLL_RATE)
+  {
+      if(WiFi.status() != WL_CONNECTED)
+      {
+          Serial.print("Trying to reconnect to WiFi");
+          while(WiFi.status() != WL_CONNECTED)
+          {
+              delay(500);
+              Serial.print(".");
+          }
+          Serial.print("WiFi connected");
+      }
+
+      Serial.print("\nConnecting to ");
+      Serial.print(host);
+      Serial.print(':');
+      Serial.println(port);
+
+      // Use WiFiClient class to create TCP connections
+      WiFiClient client;
+      if (!client.connect(host, port))
+      {
+          Serial.println("connection failed");
+          delay(1000);
+          return;
+      }
+
+      // This will send our blockages
+      if (client.connected())
+      {
+          String str = g_datatypeB + " " + g_hiveID + " ";
+          if((digitalRead(16))==0 && digitalRead(14)==0)
+              str += "false";
+           else
+              str += "true";
+           Serial.println("Sending: " + str);
+           client.println(str);
+           rateB = 0;
+      }
+      Serial.println();
+      Serial.println("Closing connection");
+      client.stop();
+  }
+
     delay(100);
-    rate += 100;
+    rateTH += 100;
+    rateB += 100;
 }
