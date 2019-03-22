@@ -61,13 +61,13 @@ public class ServerMain extends ServerSocket
                 long elapsed = System.currentTimeMillis() - m_startTime;
                 elapsed /= 1000; // 10^3 -> should be in seconds now.
                 System.out.println("Blocked: Checking for alert: " + elapsed);
-                if(db.getBlockTime(hiveID) >= 0 && elapsed > db.getBlockTime(hiveID))
+                if(db.GetBlockTime(hiveID) >= 0 && elapsed > db.GetBlockTime(hiveID))
                 {
                     if(m_cooldown < ((System.currentTimeMillis()) - m_previousTime))
                     {
                         System.out.println("SEND ALERT");
                         m_previousTime = System.currentTimeMillis();
-                        db.storeBlockage(hiveID, elapsed);
+                        db.StoreBlockage(hiveID, elapsed);
                         // has been blocked for elapsed
                         // last email send at m_previousTime
                     }
