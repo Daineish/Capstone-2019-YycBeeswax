@@ -6,7 +6,7 @@
 #include "DHT.h"
 
 #ifndef STASSID
-#define STASSID "Daine"    // WiFi name (SSID)
+#define STASSID "Travis"    // WiFi name (SSID)
 #define STAPSK  "password" // WiFi password
 #endif
 
@@ -32,7 +32,7 @@ const char* password = STAPSK;
 // This is a temporary hostname to combat dynamic IP addresses
 //const char* host = "testingarduino.hopto.org";
 // Alternatively you could just use an IP address if you know it's static
-const char* host = "172.20.10.2";
+const char* host = "10.13.145.57";
 const uint16_t port = 4444;
 
 void setup()
@@ -157,7 +157,7 @@ void loop()
         if (client.connected())
         {
             String str = g_datatypeB + " " + g_hiveID + " ";
-            if((digitalRead(16))==0 && digitalRead(14)==0)
+            if((digitalRead(16))==1)
                 str += "false";
              else
                 str += "true";
