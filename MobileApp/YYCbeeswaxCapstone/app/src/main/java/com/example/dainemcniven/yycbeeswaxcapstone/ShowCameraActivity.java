@@ -32,10 +32,10 @@ public class ShowCameraActivity extends AppCompatActivity
         switch(cam)
         {
             case 0:
-                wb.loadUrl("http://www.google.com");
+                wb.loadUrl("http://www.google.com"); // TODO: Replace with youtube stream
                 break;
             case 1:
-                wb.loadUrl("http://yahoo.com");
+                wb.loadUrl("http://yahoo.com"); // TODO: see above
                 break;
         }
 

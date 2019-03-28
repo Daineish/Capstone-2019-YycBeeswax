@@ -71,6 +71,7 @@ public class CameraListActivity extends AppCompatActivity
             cam0.setTextColor(Color.BLACK);
             cam0.setTextSize(24);
             cam0.setOnClickListener(myhandler1);
+            cam0.setBackground(getResources().getDrawable(R.drawable.button1));
             cam0.setTag(i);
             linearLayout.addView(cam0);
 
