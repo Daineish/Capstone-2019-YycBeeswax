@@ -220,12 +220,12 @@ class AndroidServer implements Runnable
                     while(rs.next())
                     {
                         int hiveVal = rs.getInt("HiveID");
-                        Time time = rs.getTime("Time");
+                        Date date = rs.getDate("Time");
                         String type = rs.getString("SensorType");
                         float sensorData = rs.getFloat("SensorData");
 
                         str += hiveVal + " ";
-                        str += time + " ";
+                        str += date + " ";
                         str += type + " ";
                         str += sensorData + "_";
                     }
