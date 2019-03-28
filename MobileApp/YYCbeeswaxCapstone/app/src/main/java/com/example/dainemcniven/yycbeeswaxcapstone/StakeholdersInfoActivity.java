@@ -1,5 +1,7 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -90,7 +92,7 @@ public class StakeholdersInfoActivity extends AppCompatActivity
 
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
 
@@ -131,7 +133,7 @@ public class StakeholdersInfoActivity extends AppCompatActivity
 
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
 
@@ -148,8 +150,17 @@ public class StakeholdersInfoActivity extends AppCompatActivity
 
         if(m_tcpClient != null)
         {
-            Log.e("Sending", "sending: " + str);
             m_tcpClient.sendMessage(str);
+            AlertDialog alertDialog = new AlertDialog.Builder(StakeholdersInfoActivity.this).create();
+            alertDialog.setTitle("Message Sent");
+            alertDialog.setMessage("Update sent to database.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
         }
     }
 

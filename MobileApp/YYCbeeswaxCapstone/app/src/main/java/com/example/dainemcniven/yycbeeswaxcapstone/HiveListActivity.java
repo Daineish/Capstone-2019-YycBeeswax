@@ -87,7 +87,7 @@ public class HiveListActivity extends AppCompatActivity
 
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
         if(m_tcpClient!=null)
@@ -152,14 +152,6 @@ public class HiveListActivity extends AppCompatActivity
             hive.setMinHeight(200);
             linearLayout.addView(hive);
 
-//            View v = new View(this);
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//            params.gravity = Gravity.CENTER;
-//            params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-//            params.height = 2;
-//            v.setBackgroundColor(Color.BLACK);
-//            v.setLayoutParams(params);
-//            linearLayout.addView(v);
         }
     }
 

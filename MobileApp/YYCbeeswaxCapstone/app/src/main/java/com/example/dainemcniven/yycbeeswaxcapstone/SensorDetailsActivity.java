@@ -1,6 +1,7 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Context;
@@ -139,7 +140,7 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
 
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
 
@@ -262,14 +263,29 @@ public class SensorDetailsActivity extends AppCompatActivity implements DialogIn
 
     public void showButtonClicked(View v)
     {
-        m_tcpClient.stopClient();
+        if(m_tcpClient != null)
+            m_tcpClient.stopClient();
         new ConnectTask().execute("");
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
 
+        if(m_hiveSpinner.getSelectedItem() == null)
+        {
+            AlertDialog alertDialog = new AlertDialog.Builder(SensorDetailsActivity.this).create();
+            alertDialog.setTitle("Error");
+            alertDialog.setMessage("Cannot connect to database.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+            return;
+        }
         String hiveId = m_hiveSpinner.getSelectedItem().toString();
         if("All".equals(hiveId))
             hiveId = "-1";

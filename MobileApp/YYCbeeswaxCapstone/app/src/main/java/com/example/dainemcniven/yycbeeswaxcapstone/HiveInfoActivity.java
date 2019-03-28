@@ -1,5 +1,7 @@
 package com.example.dainemcniven.yycbeeswaxcapstone;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -101,7 +103,7 @@ public class HiveInfoActivity extends AppCompatActivity
 
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
         // Send Request for Available Hives
@@ -158,7 +160,7 @@ public class HiveInfoActivity extends AppCompatActivity
 
         try
         {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         }
         catch (InterruptedException e) { }
 
@@ -176,7 +178,21 @@ public class HiveInfoActivity extends AppCompatActivity
         str += m_selectedHive;
 
         Log.e("Sending", "sending: "+str);
-        m_tcpClient.sendMessage(str);
+        if(m_tcpClient != null)
+        {
+            m_tcpClient.sendMessage(str);
+            AlertDialog alertDialog = new AlertDialog.Builder(HiveInfoActivity.this).create();
+            alertDialog.setTitle("Message Sent");
+            alertDialog.setMessage("Update sent to database.");
+            alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+            alertDialog.show();
+        }
+
         //Database.getInstance().UpdateHives(loc,own,tmlb,tmub,hmlb,hmub,bltm,hiveId);
     }
 

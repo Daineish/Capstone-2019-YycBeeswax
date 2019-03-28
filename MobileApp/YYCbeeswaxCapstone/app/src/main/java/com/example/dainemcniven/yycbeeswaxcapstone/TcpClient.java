@@ -3,18 +3,23 @@ package com.example.dainemcniven.yycbeeswaxcapstone;
 import android.util.Log;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Properties;
+
+import Utils.Globals;
 
 public class TcpClient
 {
 
     public static final String TAG = TcpClient.class.getSimpleName();
-    public static final String SERVER_IP = "10.13.145.57"; //server IP address
-    public static final int SERVER_PORT = 4445;
+    public static String SERVER_IP = Globals.SERVER_IP; //server IP address
+    public static int SERVER_PORT = Globals.SERVER_PORT;
     // message to send to the server
     private String mServerMessage;
     // sends message received notifications
@@ -29,10 +34,7 @@ public class TcpClient
     /**
      * Constructor of the class. OnMessagedReceived listens for the messages received from server
      */
-    public TcpClient(OnMessageReceived listener)
-    {
-        mMessageListener = listener;
-    }
+    public TcpClient(OnMessageReceived listener) { mMessageListener = listener; }
 
     /**
      * Sends the message entered by client to the server
