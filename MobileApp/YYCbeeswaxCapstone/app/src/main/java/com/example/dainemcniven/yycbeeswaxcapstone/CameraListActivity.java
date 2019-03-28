@@ -53,12 +53,12 @@ public class CameraListActivity extends AppCompatActivity
     private void GetAvailableCameras()
     {
         LinearLayout mainLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.FILL_PARENT, ActionBar.LayoutParams.FILL_PARENT);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT);
         ScrollView scrollView = new ScrollView(this);
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
-        mainLayout.addView(scrollView);
-        scrollView.addView(linearLayout);
+        mainLayout.addView(scrollView, layoutParams);
+        scrollView.addView(linearLayout, layoutParams);
         this.addContentView(mainLayout, layoutParams);
 
         for(int i = 0; i < 2; i++)
@@ -71,6 +71,8 @@ public class CameraListActivity extends AppCompatActivity
             cam0.setTextColor(Color.BLACK);
             cam0.setTextSize(24);
             cam0.setOnClickListener(myhandler1);
+            cam0.setGravity(Gravity.CENTER);
+            cam0.setMinHeight(200);
             cam0.setBackground(getResources().getDrawable(R.drawable.button1));
             cam0.setTag(i);
             linearLayout.addView(cam0);
