@@ -41,7 +41,6 @@ void setup()
 
     dht.begin();
     pinMode(16,INPUT);
-    pinMode(14,INPUT);
     // back to our code
 
     // We start by connecting to a WiFi network
@@ -157,10 +156,10 @@ void loop()
         if (client.connected())
         {
             String str = g_datatypeB + " " + g_hiveID + " ";
-            if((digitalRead(16))==1)
-                str += "false";
-             else
+            if((digitalRead(16))==0)
                 str += "true";
+             else
+                str += "false";
              Serial.println("Sending: " + str);
              client.println(str);
              rateB = 0;
