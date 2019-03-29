@@ -32,7 +32,7 @@ const char* password = STAPSK;
 // This is a temporary hostname to combat dynamic IP addresses
 //const char* host = "testingarduino.hopto.org";
 // Alternatively you could just use an IP address if you know it's static
-const char* host = "10.13.145.57";
+const char* host = "10.13.122.157";
 const uint16_t port = 4444;
 
 void setup()
